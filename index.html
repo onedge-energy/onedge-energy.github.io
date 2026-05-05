@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>ONEDGE ENERGY — Proposed Open Standard for Certified BESS Operational Evidence</title>
-  <meta name="description" content="ONEDGE ENERGY is a proposed open standard and candidate standard entering TRL-7 validation for certified BESS operational evidence, powered by IKKUNA's ECME Kernel." />
-  <meta property="og:title" content="ONEDGE ENERGY — Certified BESS Operational Evidence" />
-  <meta property="og:description" content="A proposed open standard and candidate standard entering TRL-7 validation for Golden Record certification of battery operations." />
+  <title>ONEDGE ENERGY v0.0.2 — Candidate Specification for Certified BESS Operational Evidence</title>
+  <meta name="description" content="ONEDGE ENERGY v0.0.2 is a specification-hardening update: proposed open standard, candidate specification, and pre-TRL-7 validation anchor for certified BESS operational evidence." />
+  <meta property="og:title" content="ONEDGE ENERGY v0.0.2 — Candidate Specification" />
+  <meta property="og:description" content="Specification-hardening update for Golden Record certification of BESS operational evidence." />
   <meta property="og:type" content="website" />
   <meta name="theme-color" content="#0b1220" />
   <style>
@@ -22,6 +22,7 @@
       --warn: #7a4b12;
       --ok: #184c36;
       --bad: #6d1f1f;
+      --blue: #1f3b63;
       --mono: "SFMono-Regular", "Roboto Mono", Consolas, "Liberation Mono", monospace;
       --serif: Georgia, "Times New Roman", Times, serif;
       --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -38,19 +39,10 @@
       line-height: 1.55;
     }
 
-    a {
-      color: var(--accent);
-      text-decoration-thickness: 1px;
-      text-underline-offset: 3px;
-    }
-
+    a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 3px; }
     a:hover { text-decoration-thickness: 2px; }
 
-    .page {
-      max-width: 1220px;
-      margin: 0 auto;
-      padding: 28px 24px 72px;
-    }
+    .page { max-width: 1240px; margin: 0 auto; padding: 28px 24px 72px; }
 
     header {
       display: flex;
@@ -83,7 +75,7 @@
 
     .hero {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) 340px;
+      grid-template-columns: minmax(0, 1fr) 360px;
       gap: 56px;
       align-items: start;
       padding-bottom: 76px;
@@ -110,24 +102,19 @@
     }
 
     h1 {
-      font-size: clamp(44px, 7.6vw, 92px);
+      font-size: clamp(44px, 7.4vw, 92px);
       max-width: 980px;
       letter-spacing: -0.045em;
     }
 
     .subhead {
-      max-width: 800px;
+      max-width: 840px;
       margin: 28px 0 0;
       font-size: clamp(18px, 2.1vw, 24px);
       color: var(--ink-2);
     }
 
-    .actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 34px;
-    }
+    .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 34px; }
 
     .button {
       display: inline-flex;
@@ -145,10 +132,7 @@
       background: var(--panel);
     }
 
-    .button.primary {
-      background: var(--ink);
-      color: var(--paper);
-    }
+    .button.primary { background: var(--ink); color: var(--paper); }
 
     .sidecard {
       border: 1px solid var(--line);
@@ -196,23 +180,10 @@
       margin-bottom: 24px;
     }
 
-    h3 {
-      font-size: 25px;
-      letter-spacing: -0.015em;
-      margin-bottom: 8px;
-    }
+    h3 { font-size: 25px; letter-spacing: -0.015em; margin-bottom: 8px; }
+    h4 { font-size: 20px; margin-bottom: 8px; }
 
-    h4 {
-      font-size: 20px;
-      margin-bottom: 8px;
-    }
-
-    p {
-      margin: 0 0 18px;
-      max-width: 840px;
-      font-size: 18px;
-    }
-
+    p { margin: 0 0 18px; max-width: 860px; font-size: 18px; }
     .lead { font-size: 22px; color: var(--ink-2); }
 
     .quote {
@@ -222,19 +193,12 @@
       background: var(--panel);
       font-family: var(--serif);
       font-size: 24px;
-      max-width: 920px;
+      max-width: 940px;
     }
 
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 16px;
-      margin-top: 28px;
-    }
-
-    .grid.two {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
+    .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 28px; }
+    .grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid.five { grid-template-columns: repeat(5, minmax(0, 1fr)); }
 
     .card {
       border: 1px solid var(--line);
@@ -242,6 +206,8 @@
       padding: 22px;
       min-height: 210px;
     }
+
+    .card.compact { min-height: 140px; }
 
     .card .tag {
       display: inline-block;
@@ -256,6 +222,7 @@
     .card.compliant { border-top: 4px solid var(--ok); }
     .card.breach { border-top: 4px solid var(--bad); }
     .card.opacity { border-top: 4px solid var(--warn); }
+    .card.blue { border-top: 4px solid var(--blue); }
 
     .formula {
       overflow-x: auto;
@@ -276,7 +243,7 @@
 
     .stack-row {
       display: grid;
-      grid-template-columns: 240px 1fr;
+      grid-template-columns: 260px 1fr;
       border-bottom: 1px solid var(--line);
     }
 
@@ -293,16 +260,9 @@
       background: var(--panel-2);
     }
 
-    .stack-body {
-      padding: 18px;
-      font-size: 17px;
-    }
+    .stack-body { padding: 18px; font-size: 17px; }
 
-    ul, ol {
-      margin: 12px 0 0;
-      padding-left: 20px;
-    }
-
+    ul, ol { margin: 12px 0 0; padding-left: 20px; }
     li { margin: 8px 0; }
 
     .doc-table {
@@ -333,20 +293,7 @@
 
     .doc-table tr:last-child td { border-bottom: 0; }
     .mono { font-family: var(--mono); font-size: 13px; }
-
-    .notice {
-      border: 1px solid var(--ink);
-      background: var(--panel);
-      padding: 20px;
-      margin-top: 28px;
-      max-width: 920px;
-    }
-
-    .small {
-      font-size: 14px;
-      color: var(--muted);
-      font-family: var(--mono);
-    }
+    .small { font-size: 14px; color: var(--muted); font-family: var(--mono); }
 
     footer {
       padding-top: 38px;
@@ -361,12 +308,12 @@
       letter-spacing: .04em;
     }
 
-    @media (max-width: 900px) {
+    @media (max-width: 980px) {
       header, .hero, section, .grid.two, .stack-row { grid-template-columns: 1fr; }
       header { align-items: flex-start; }
       nav { justify-content: flex-start; }
       .hero { gap: 32px; }
-      .grid { grid-template-columns: 1fr; }
+      .grid, .grid.five { grid-template-columns: 1fr; }
       .section-label { position: static; }
       .stack-title { border-right: 0; border-bottom: 1px solid var(--line); }
       .doc-table { display: block; overflow-x: auto; }
@@ -379,116 +326,111 @@
       <div class="brand">ONEDGE ENERGY</div>
       <nav aria-label="Primary navigation">
         <a href="#abstract">Abstract</a>
+        <a href="#hardening">v0.0.2</a>
         <a href="#golden-record">Golden Record</a>
-        <a href="#formalization">Formalization</a>
-        <a href="#stack">Stack</a>
+        <a href="#boundary">Boundary</a>
+        <a href="#conformance">Conformance</a>
         <a href="#claims">Claims</a>
-        <a href="#validation">Validation</a>
       </nav>
     </header>
 
     <main>
       <div class="hero">
         <div>
-          <div class="status">Proposed Open Standard / Candidate Standard Entering TRL-7 Validation / v0.0.1</div>
-          <h1>A proposed open standard for certified BESS operational evidence.</h1>
-          <p class="subhead">ONEDGE ENERGY, powered by IKKUNA's ECME Kernel, converts battery dispatch, telemetry provenance, physical-envelope constraints, and warranty-relevant operating conditions into Golden Records: cryptographically verifiable operational evidence objects.</p>
+          <div class="status">v0.0.2 / Specification-Hardening Update / Candidate Specification / Pre-TRL-7 Validation</div>
+          <h1>A candidate specification for certified BESS operational evidence.</h1>
+          <p class="subhead">ONEDGE ENERGY v0.0.2 hardens the proposed open standard into a more precise public specification: verification boundaries, conformance tiers, threat-model framing, semantic-versioning governance, and a candidate extension for flexible-load and curtailment-provenance certification.</p>
           <div class="actions">
-            <a class="button primary" href="#documents">Read Whitepaper v0.0.1</a>
-            <a class="button" href="#golden-record">View Golden Record Logic</a>
+            <a class="button primary" href="https://raw.githubusercontent.com/onedge-energy/onedge-energy.github.io/refs/heads/main/public/whitepaper/onedge-energy-whitepaper-latest.pdf" target="_blank" rel="noopener">Read Whitepaper v0.0.2</a>
+            <a class="button" href="#conformance">View Conformance Tiers</a>
           </div>
         </div>
         <aside class="sidecard" aria-label="Whitepaper metadata">
           <div><span>Issuer</span><span>IKKUNA SpA</span></div>
           <div><span>Product / Standard</span><span>ONEDGE ENERGY</span></div>
           <div><span>Core Technology</span><span>ECME Kernel</span></div>
-          <div><span>Version</span><span>v0.0.1</span></div>
-          <div><span>Date</span><span>May 5, 2026</span></div>
-          <div><span>Audience</span><span>Banks / OEMs / Owners / Regulators / Auditors</span></div>
+          <div><span>Version</span><span>v0.0.2</span></div>
+          <div><span>Canonical PDF</span><span><a href="https://raw.githubusercontent.com/onedge-energy/onedge-energy.github.io/refs/heads/main/public/whitepaper/onedge-energy-whitepaper-latest.pdf" target="_blank" rel="noopener">Open</a></span></div>
+          <div><span>Release Type</span><span>Specification-hardening update</span></div>
+          <div><span>Supersedes</span><span>v0.0.1</span></div>
+          <div><span>Status</span><span>Proposed open standard / pre-TRL-7</span></div>
         </aside>
       </div>
 
       <section id="abstract">
         <div class="section-label">01 / Abstract</div>
         <div>
-          <h2>The bottleneck is certified coordination.</h2>
-          <p class="lead">Renewable-heavy power systems are entering a battery-intensive phase where the core challenge is not only energy generation, but certified coordination of flexibility assets under simultaneous physical, financial, regulatory, and warranty constraints.</p>
-          <p>ONEDGE ENERGY proposes an open-standard certification layer for BESS operations. Its central object is the Golden Record, which classifies each certified event as compliant, breached, or opaque by binding asset state, dispatch context, telemetry provenance, operating-envelope constraints, state-transition logic, and verification artifacts into an auditable record.</p>
+          <h2>Certified coordination is the next bottleneck.</h2>
+          <p class="lead">Renewable-heavy power systems are entering a battery-intensive phase where the bottleneck is no longer only generation, but certified coordination of flexibility assets under physical, financial, regulatory, operational, and warranty constraints.</p>
+          <p>ONEDGE ENERGY, powered by IKKUNA's ECME Kernel, is presented as a proposed open standard and candidate specification for BESS operational evidence. Its central object is the Golden Record: a cryptographically committed operational evidence object that classifies each certified event as Compliant, Breach, or Opacity.</p>
           <div class="quote">Open standard at the interface. Sovereign proof authority at the core.</div>
         </div>
       </section>
 
-      <section id="problem">
-        <div class="section-label">02 / System Problem</div>
+      <section id="hardening">
+        <div class="section-label">02 / v0.0.2 Delta</div>
         <div>
-          <h2>System dispatch and asset warranties do not speak the same evidence language.</h2>
-          <p>The CEN coordinates Chile's SEN according to system-level objectives such as safety, continuity, economic dispatch, and open access. That role protects the system, but it is not designed to become the warranty arbiter, lender diligence agent, or asset-degradation certifier for every BESS.</p>
-          <p>A dispatch instruction can be systemically correct and still create asset-level warranty, degradation, or lender-legibility ambiguity.</p>
-          <div class="quote">ONEDGE ENERGY does not merely improve dispatch. It targets the risk premium embedded in operational opacity.</div>
+          <h2>From public whitepaper to specification discipline.</h2>
+          <p>Version v0.0.2 supersedes v0.0.1 and introduces stricter candidate-standard controls. The landing page should now foreground the document as a specification-hardening update, not merely a strategic introduction.</p>
+          <div class="grid two">
+            <article class="card blue">
+              <span class="tag">Added in v0.0.2</span>
+              <ul>
+                <li>explicit verification boundary;</li>
+                <li>conformance tiers;</li>
+                <li>threat-model framing;</li>
+                <li>candidate flexible-load / curtailment-provenance extension;</li>
+                <li>document stratification and semantic-versioning governance.</li>
+              </ul>
+            </article>
+            <article class="card">
+              <span class="tag">Claim discipline</span>
+              <p>v0.0.2 remains pre-TRL-7. It does not claim industry adoption, financial guarantees, OEM acceptance, regulatory approval, CEN endorsement, EPRI endorsement, or final standard status.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="problem">
+        <div class="section-label">03 / System Problem</div>
+        <div>
+          <h2>System dispatch and asset warranties require a shared evidence object.</h2>
+          <p>The CEN coordinates Chile's SEN according to system-level objectives such as security, continuity, economic dispatch, and open access. That mandate is not designed to become the warranty arbiter, lender diligence agent, telemetry-provenance authority, or asset-degradation certifier for every BESS.</p>
+          <div class="quote">A dispatch instruction can be systemically correct and still create asset-level warranty, degradation, lender-legibility, or telemetry-provenance ambiguity.</div>
         </div>
       </section>
 
       <section id="golden-record">
-        <div class="section-label">03 / Golden Record</div>
+        <div class="section-label">04 / Golden Record</div>
         <div>
           <h2>Prove compliance, prove breach, or flag opacity.</h2>
-          <p>The Golden Record creates a repeatable operational evidence object for answering whether a BESS operated in a way that was physically feasible, financially legible, and warranty-defensible.</p>
+          <p>The Golden Record turns operational behavior into certified evidence by binding asset state, dispatch context, telemetry provenance, operating-envelope constraints, state-transition logic, and verification artifacts into an auditable record.</p>
           <div class="grid">
             <article class="card compliant">
               <span class="tag">State 01</span>
               <h3>Compliant</h3>
-              <p>The asset respected its declared physical, operational, warranty, and contractual envelope.</p>
+              <p>Approved telemetry is available and the asset respected its declared physical, operational, warranty, and contractual envelope.</p>
             </article>
             <article class="card breach">
               <span class="tag">State 02</span>
               <h3>Breach</h3>
-              <p>The asset operated outside its declared envelope. This can support OEM attribution and warranty-defense logic.</p>
+              <p>Approved telemetry is available and the event operated outside the declared envelope, supporting attribution and warranty-defense logic.</p>
             </article>
             <article class="card opacity">
               <span class="tag">State 03</span>
               <h3>Opacity</h3>
-              <p>Required telemetry was missing, corrupt, delayed, inconsistent, non-sequenced, or unverifiable.</p>
+              <p>Telemetry provenance fails or the evidentiary substrate is incomplete, corrupted, delayed, inconsistent, manipulated, or physically unavailable.</p>
             </article>
           </div>
-          <div class="quote">ONEDGE ENERGY either proves compliance, proves breach, or flags opacity. It does not convert missing data into false certainty.</div>
-        </div>
-      </section>
-
-      <section id="boundary">
-        <div class="section-label">04 / Telemetry Boundary</div>
-        <div>
-          <h2>No rip-and-replace. No false positives.</h2>
-          <p>ONEDGE ENERGY does not replace sensor hardware, BMS infrastructure, SCADA systems, meters, inverters, or OEM monitoring systems. The proposed standard requires baselined data provenance from approved asset-originated sources.</p>
-          <div class="grid two">
-            <article class="card">
-              <span class="tag">The standard requires</span>
-              <ul>
-                <li>approved asset-originated telemetry sources;</li>
-                <li>complete, authentic, and sequenced data;</li>
-                <li>operating-envelope parameters;</li>
-                <li>state-transition consistency;</li>
-                <li>verification artifacts tied to declared inputs.</li>
-              </ul>
-            </article>
-            <article class="card">
-              <span class="tag">Opacity may include</span>
-              <ul>
-                <li>missing or corrupted telemetry;</li>
-                <li>inconsistent BMS / SCADA / meter values;</li>
-                <li>unverified data origin;</li>
-                <li>sensor drift beyond tolerance;</li>
-                <li>mismatch between dispatch instruction and asset-response records.</li>
-              </ul>
-            </article>
-          </div>
+          <div class="quote">ONEDGE does not manufacture certainty. It classifies the evidentiary state.</div>
         </div>
       </section>
 
       <section id="formalization">
-        <div class="section-label">05 / Formalization</div>
+        <div class="section-label">05 / Formal Logic</div>
         <div>
           <h2>Event-indexed certification logic.</h2>
-          <p>At the certification layer, BESS operation is observed over an endogenous sequence of operational events indexed by <span class="mono">k ∈ N</span>. The index advances when a new observable state transition occurs.</p>
+          <p>At the certification layer, BESS operation is observed as an endogenous sequence of operational events indexed by <span class="mono">k ∈ N</span>. The event index advances only when a new observable state transition occurs.</p>
           <div class="formula">xₖ₊₁ = Tθ(xₖ, uₖ, yₖ, dₖ)
 subject to: g(xₖ, uₖ; θ) ≤ 0
 
@@ -509,91 +451,142 @@ GRₖ = h(xₖ, uₖ, dₖ, yₖ, θ, P(yₖ), E(xₖ,uₖ;θ), σₖ, xₖ₊�
         </div>
       </section>
 
+      <section id="boundary">
+        <div class="section-label">06 / Boundary</div>
+        <div>
+          <h2>What ONEDGE does — and what it does not do.</h2>
+          <div class="grid two">
+            <article class="card">
+              <span class="tag">ONEDGE does</span>
+              <ul>
+                <li>ingest baselined telemetry;</li>
+                <li>evaluate declared operating envelopes;</li>
+                <li>classify events as Compliant, Breach, or Opacity;</li>
+                <li>produce audit-supporting certificates;</li>
+                <li>reduce evidentiary ambiguity;</li>
+                <li>support lender, OEM, owner, operator, auditor, and regulatory diligence.</li>
+              </ul>
+            </article>
+            <article class="card">
+              <span class="tag">ONEDGE does not</span>
+              <ul>
+                <li>replace CEN or any system operator's dispatch authority;</li>
+                <li>replace BMS, SCADA, meters, inverters, sensors, or OEM monitoring hardware;</li>
+                <li>create telemetry where hardware telemetry does not exist;</li>
+                <li>certify compliance where telemetry provenance fails;</li>
+                <li>auto-resolve legal disputes or replace lender diligence;</li>
+                <li>guarantee WACC, LTSA, warranty, or degradation outcomes.</li>
+              </ul>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="conformance">
+        <div class="section-label">07 / Conformance</div>
+        <div>
+          <h2>Incremental adoption through conformance tiers.</h2>
+          <p>v0.0.2 introduces preliminary conformance tiers so an asset owner, OEM, lender, or operator can adopt the standard progressively rather than through a single disruptive integration event.</p>
+          <div class="grid five">
+            <article class="card compact"><span class="tag">Level 0</span><h3>Observed</h3><p>Telemetry observed, no certification.</p></article>
+            <article class="card compact"><span class="tag">Level 1</span><h3>Baselined</h3><p>Approved asset-originated telemetry sources mapped to requirements.</p></article>
+            <article class="card compact"><span class="tag">Level 2</span><h3>Classified</h3><p>Events classified as Compliant, Breach, or Opacity.</p></article>
+            <article class="card compact"><span class="tag">Level 3</span><h3>Reported</h3><p>Lender, OEM, owner, and operator reporting formats generated.</p></article>
+            <article class="card compact"><span class="tag">Level 4</span><h3>Certified</h3><p>Full Golden Record certification under StandardCo validation.</p></article>
+          </div>
+        </div>
+      </section>
+
+      <section id="threat-model">
+        <div class="section-label">08 / Threat Model</div>
+        <div>
+          <h2>Refuse to certify defective evidence.</h2>
+          <p>The v0.0.2 threat model explicitly includes missing telemetry, corrupted telemetry, delayed or non-sequenced telemetry, sensor drift, manipulated sensor feeds, BMS / SCADA / meter inconsistencies, data replay, unauthorized schema modification, model drift, false curtailment claims, false compliance claims, false breach accusations, OEM data asymmetry, operator misreporting, dispatch-envelope mismatch, commercial misrepresentation, and attempts to treat opacity as compliance.</p>
+          <div class="quote">The three-state model reduces these threats by refusing to certify compliance where the evidentiary substrate is defective.</div>
+        </div>
+      </section>
+
       <section id="stack">
-        <div class="section-label">06 / ONEDGE Stack</div>
+        <div class="section-label">09 / Stack</div>
         <div>
           <h2>Open interface. Sovereign proof core. Physical asset layer.</h2>
-          <p>The market may adopt the open interface. IKKUNA preserves the sovereign proof core. The asset remains physically grounded.</p>
           <div class="stack">
             <div class="stack-row">
-              <div class="stack-title">Open Standard Interface</div>
-              <div class="stack-body">Certificate schema, API interfaces, bank / OEM / regulator reports, dashboards, data-submission fields, conformance terminology, antitrust-safe access criteria, and standard-formation reporting categories.</div>
+              <div class="stack-title">Open / Semi-Open Layer</div>
+              <div class="stack-body">Certificate schema, telemetry categories, provenance requirements, operating-envelope fields, audit interface, API-level submission logic, conformance terminology, governance principles, antitrust-safe access criteria, and reporting categories.</div>
             </div>
             <div class="stack-row">
-              <div class="stack-title">Sovereign StandardCo Core — IKKUNA</div>
+              <div class="stack-title">Sovereign IKKUNA Layer</div>
               <div class="stack-body">ECME Kernel, deterministic optimization engine, physical state-transition verification, cryptographic proof architecture, Golden Record issuance authority, calibration methodology, certification methodology, reference validator, proof circuits, and StandardCo governance authority.</div>
             </div>
             <div class="stack-row">
               <div class="stack-title">Physical Asset Layer</div>
-              <div class="stack-body">BESS asset, BMS, SCADA, inverters, sensors, dispatch orders, operator actions, and asset-originated telemetry sources.</div>
-            </div>
-            <div class="stack-row">
-              <div class="stack-title">Institutional Reviewers</div>
-              <div class="stack-body">Banks, lenders, OEMs, LTSA providers, regulators, auditors, owners, operators, and technical standard institutions.</div>
+              <div class="stack-body">BESS asset, BMS, SCADA, inverters, sensors, meters, dispatch orders, operator actions, and asset-originated telemetry sources.</div>
             </div>
           </div>
         </div>
       </section>
 
-      <section id="equilibrium">
-        <div class="section-label">07 / Market Game</div>
+      <section id="extension">
+        <div class="section-label">10 / Candidate Extension</div>
         <div>
-          <h2>From high deployment with low legibility to high deployment with high legibility.</h2>
-          <p>Without a shared operational standard, each actor rationally protects itself: banks price opacity into WACC, OEMs preserve broad warranty discretion, owners lack standardized proof of prudence, and operators remain exposed after the fact.</p>
-          <p>ONEDGE ENERGY introduces a shared evidence object. CEN dispatch remains system-sovereign; the BESS response is classified as compliant, breach, or opacity; the owner converts disciplined operation into financial evidence; the OEM gains attribution evidence; and lenders can underwrite operational history.</p>
+          <h2>Flexible-load and curtailment-provenance certification.</h2>
+          <p>v0.0.2 introduces flexible-load and curtailment-provenance certification only as a Candidate Extension. It is not part of the initial validated BESS warranty-certification claim set.</p>
+          <p>A flexible load may claim that it operates exclusively, preferentially, or conditionally on curtailed or excess energy. ONEDGE treats that claim as evidentiary: it requires metered energy provenance, dispatch context, authorized system / settlement / metering records, and the same Compliant / Breach / Opacity classification discipline.</p>
+          <div class="quote">ONEDGE classifies evidence against declared inputs. It does not replace system operators, market settlement systems, or applicable regulatory records.</div>
+        </div>
+      </section>
+
+      <section id="governance">
+        <div class="section-label">11 / Versioned Governance</div>
+        <div>
+          <h2>Document stratification and semantic versioning.</h2>
+          <p>v0.0.2 introduces specification-level version discipline to prevent silent schema drift during TRL-7 validation and future standard-formation processes.</p>
+          <div class="grid">
+            <article class="card">
+              <span class="tag">Public Specification</span>
+              <h3>Standard-facing</h3>
+              <p>Sanitized abstract definitions, public schema language, and candidate-standard posture.</p>
+            </article>
+            <article class="card">
+              <span class="tag">Confidential Data Room</span>
+              <h3>Validation-facing</h3>
+              <p>Architecture, OEM strategy, legal mapping, validation artifacts, lender diligence materials, and certificate samples.</p>
+            </article>
+            <article class="card">
+              <span class="tag">Internal StandardCo</span>
+              <h3>Proof-facing</h3>
+              <p>Proof logic, patentable claims, implementation details, and trade-secret boundaries.</p>
+            </article>
+          </div>
         </div>
       </section>
 
       <section id="validation">
-        <div class="section-label">08 / Validation Path</div>
+        <div class="section-label">12 / TRL-7 Path</div>
         <div>
-          <h2>Chile as reference jurisdiction for global standard formation.</h2>
-          <p>Chile is the proving ground because battery deployment is accelerating, the SEN needs firmness, renewable penetration creates flexibility stress, mining and data centers require reliable energy, and CEN provides a system-level dispatch context.</p>
+          <h2>The public specification anchor for the future TRL-7 data room.</h2>
+          <p>This whitepaper is not the Data Room itself. It functions as the public specification anchor. The proposed TRL-7 Data Room should contain private validation evidence, legal scoping materials, OEM / warranty mappings, lender diligence artifacts, telemetry summaries, and certificate samples linked to the applicable v0.0.2 schema.</p>
           <ol>
-            <li><strong>Define the certification object:</strong> dispatch compliance record, warranty-support record, OEM defense record, lender diligence record, operator attribution record, telemetry provenance record, breach record, and opacity-event record.</li>
+            <li><strong>Define the certification object:</strong> dispatch compliance, warranty support, OEM defense, lender diligence, operator attribution, telemetry provenance, breach record, and opacity-event record.</li>
             <li><strong>Reference deployment:</strong> TRL-7 shadow-mode validation on real assets under real conditions.</li>
             <li><strong>Lender and OEM legibility:</strong> convert certified evidence into reusable diligence and warranty language.</li>
             <li><strong>Governance file:</strong> document that the standard is open at the interface, merit-based, interoperable, non-coercive, and not a foreclosure tool.</li>
-            <li><strong>Institutional adoption:</strong> build referenceability across banks, OEMs, owners, operators, validators, and technical standard institutions.</li>
+            <li><strong>Institutional adoption:</strong> build referenceability across banks, OEMs, owners, operators, validators, and standard institutions.</li>
           </ol>
         </div>
       </section>
 
-      <section id="ecosystem">
-        <div class="section-label">09 / Ecosystem Call</div>
-        <div>
-          <h2>Help define the standard before opacity becomes the bottleneck.</h2>
-          <div class="grid two">
-            <article class="card">
-              <span class="tag">Banks and lenders</span>
-              <p>Review the Golden Record schema against credit committee requirements, refinancing diligence, covenant monitoring, and asset-performance review.</p>
-            </article>
-            <article class="card">
-              <span class="tag">OEMs and LTSA providers</span>
-              <p>Map warranty-envelope parameters into Golden Record logic, including warranty-support and warranty-defense use cases.</p>
-            </article>
-            <article class="card">
-              <span class="tag">Owners and operators</span>
-              <p>Convert disciplined operation into financial evidence and identify breach or opacity conditions before they become disputes.</p>
-            </article>
-            <article class="card">
-              <span class="tag">Regulators and public institutions</span>
-              <p>Evaluate ONEDGE as an observability and certification layer that complements system dispatch without challenging dispatch authority.</p>
-            </article>
-          </div>
-        </div>
-      </section>
-
       <section id="claims">
-        <div class="section-label">10 / Claims Discipline</div>
+        <div class="section-label">13 / Claims Discipline</div>
         <div>
-          <h2>What the whitepaper claims — and what it does not claim.</h2>
+          <h2>Bounded claims for a pre-TRL-7 candidate specification.</h2>
           <div class="grid two">
             <article class="card">
               <span class="tag">Claims made</span>
               <ul>
                 <li>ONEDGE ENERGY is a proposed open standard for certified BESS operational evidence.</li>
-                <li>ONEDGE ENERGY is entering TRL-7 validation.</li>
+                <li>ONEDGE ENERGY is a candidate specification in pre-TRL-7 validation status.</li>
                 <li>ONEDGE ENERGY requires baselined telemetry provenance.</li>
                 <li>ONEDGE ENERGY can classify certified events as compliant, breached, or opaque.</li>
                 <li>ONEDGE ENERGY is designed to reduce evidentiary ambiguity.</li>
@@ -603,68 +596,34 @@ GRₖ = h(xₖ, uₖ, dₖ, yₖ, θ, P(yₖ), E(xₖ,uₖ;θ), σₖ, xₖ₊�
               <span class="tag">Claims not made</span>
               <ul>
                 <li>It is not already an adopted industry standard.</li>
+                <li>It has not completed TRL-7 validation.</li>
                 <li>It does not guarantee lower WACC or LTSA costs.</li>
-                <li>It does not guarantee warranty approval.</li>
-                <li>It does not prevent degradation.</li>
-                <li>It does not replace CEN dispatch or OEM monitoring systems.</li>
+                <li>It does not guarantee warranty approval or prevent degradation.</li>
+                <li>It does not replace CEN dispatch, OEM monitoring systems, or authorized curtailment records.</li>
               </ul>
             </article>
           </div>
-          <div class="quote">ONEDGE ENERGY reduces the scope and ambiguity of disputes by producing verified operational evidence, breach evidence, or opacity evidence.</div>
+          <div class="quote">ONEDGE reduces the scope and ambiguity of disputes by producing verified operational evidence, breach evidence, or opacity evidence.</div>
         </div>
       </section>
 
       <section id="documents">
-        <div class="section-label">11 / Documents</div>
+        <div class="section-label">14 / Public Data Room</div>
         <div>
-          <h2>Public data room.</h2>
-          <p>The first release of ONEDGE ENERGY is document-first and ungated. The public site should become the canonical location for the candidate standard, whitepaper, Golden Record state model, validation protocol, and conformance materials.</p>
-          <table class="doc-table" aria-label="ONEDGE ENERGY document index">
+          <h2>Document-first institutional interface.</h2>
+          <p>The landing page should serve as the public specification index for ONEDGE ENERGY v0.0.2. Each artifact should be directly accessible, versioned, dated, and, where appropriate, hash-addressed.</p>
+          <table class="doc-table" aria-label="ONEDGE ENERGY v0.0.2 document index">
             <thead>
-              <tr>
-                <th>Document</th>
-                <th>Status</th>
-                <th>Version</th>
-                <th>Purpose</th>
-              </tr>
+              <tr><th>Document</th><th>Status</th><th>Version</th><th>Purpose</th></tr>
             </thead>
             <tbody>
-              <tr>
-                <td>ONEDGE ENERGY Whitepaper</td>
-                <td>Current pre-release</td>
-                <td class="mono">v0.0.1</td>
-                <td>Strategic and technical basis for the proposed open standard.</td>
-              </tr>
-              <tr>
-                <td>Candidate Standard Draft</td>
-                <td>Preparing for publication</td>
-                <td class="mono">v0.0.1</td>
-                <td>Canonical definition of the certified BESS operational evidence interface.</td>
-              </tr>
-              <tr>
-                <td>Golden Record State Model</td>
-                <td>Preparing for publication</td>
-                <td class="mono">v0.0.1</td>
-                <td>Formal classification logic for compliant, breach, and opacity events.</td>
-              </tr>
-              <tr>
-                <td>Telemetry Provenance Requirements</td>
-                <td>Preparing for publication</td>
-                <td class="mono">v0.0.1</td>
-                <td>Approved asset-originated sources, sequencing, completeness, and authenticity requirements.</td>
-              </tr>
-              <tr>
-                <td>TRL-7 Validation Protocol</td>
-                <td>Preparing for publication</td>
-                <td class="mono">v0.0.1</td>
-                <td>Shadow-mode validation procedure for real BESS assets.</td>
-              </tr>
-              <tr>
-                <td>Church &amp; State Architecture</td>
-                <td>Preparing for publication</td>
-                <td class="mono">v0.0.1</td>
-                <td>Boundary between open interface, sovereign proof core, and commercial deployment.</td>
-              </tr>
+              <tr><td><a href="https://raw.githubusercontent.com/onedge-energy/onedge-energy.github.io/refs/heads/main/public/whitepaper/onedge-energy-whitepaper-latest.pdf" target="_blank" rel="noopener">ONEDGE ENERGY Whitepaper</a></td><td>Current public anchor</td><td class="mono">v0.0.2</td><td>Specification-hardening update and public candidate-standard narrative.</td></tr>
+              <tr><td>Golden Record State Model</td><td>Candidate specification</td><td class="mono">v0.0.2</td><td>Compliant / Breach / Opacity formal classification logic.</td></tr>
+              <tr><td>Verification Boundary Note</td><td>Candidate specification</td><td class="mono">v0.0.2</td><td>Precise statement of what ONEDGE does and does not do.</td></tr>
+              <tr><td>Conformance Tiers</td><td>New in v0.0.2</td><td class="mono">v0.0.2</td><td>Level 0 to Level 4 adoption path from observed telemetry to full Golden Record certification.</td></tr>
+              <tr><td>Threat Model</td><td>New in v0.0.2</td><td class="mono">v0.0.2</td><td>Adversarial, operational, and evidentiary failure modes.</td></tr>
+              <tr><td>Flexible-Load / Curtailment-Provenance Extension</td><td>Candidate extension</td><td class="mono">v0.0.2</td><td>Non-core extension for curtailment-powered flexible-load evidence claims.</td></tr>
+              <tr><td>TRL-7 Data Room Index</td><td>Preparing</td><td class="mono">v0.0.2</td><td>Private validation evidence, legal scoping, OEM mappings, lender materials, telemetry summaries, and certificate samples.</td></tr>
             </tbody>
           </table>
           <p class="small">Disclaimer: materials are provided for discussion and validation purposes only and do not constitute legal, financial, investment, regulatory, engineering, tax, or professional advice.</p>
@@ -673,8 +632,8 @@ GRₖ = h(xₖ, uₖ, dₖ, yₖ, θ, P(yₖ), E(xₖ,uₖ;θ), σₖ, xₖ₊�
     </main>
 
     <footer>
-      <span>ONEDGE ENERGY / IKKUNA SpA / Whitepaper v0.0.1</span>
-      <span>Proposed Open Standard / Candidate Standard Entering TRL-7 Validation</span>
+      <span>ONEDGE ENERGY / IKKUNA SpA / Whitepaper v0.0.2</span>
+      <span>Proposed Open Standard / Candidate Specification / Pre-TRL-7 Validation</span>
     </footer>
   </div>
 </body>
