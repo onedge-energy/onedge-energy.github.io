@@ -1,0 +1,616 @@
+\documentclass[11pt,letterpaper]{article}
+
+% ------------------------------------------------------------
+% ONEDGE ENERGY -- Module Extension Specification
+% MODULES-SPEC-1.1.0-rc3 (under STANDARD axis S-0.0.4)
+% Issuer: IKKUNA SpA (StandardCo)
+% ------------------------------------------------------------
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage[margin=1in]{geometry}
+\usepackage{parskip}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{amsthm}
+\usepackage{fancyhdr}
+\usepackage{longtable}
+\usepackage{listings}
+\usepackage{mathtools}
+
+\definecolor{lightgray}{rgb}{0.95, 0.95, 0.95}
+\definecolor{normblue}{rgb}{0.10, 0.20, 0.55}
+\definecolor{warnred}{rgb}{0.65, 0.10, 0.10}
+
+\lstset{
+    backgroundcolor=\color{lightgray},
+    basicstyle=\small\ttfamily,
+    frame=single,
+    breaklines=true,
+    columns=fullflexible,
+    captionpos=b,
+    showstringspaces=false
+}
+
+\setcounter{secnumdepth}{3}
+\titleformat{\section}{\large\bfseries}{\thesection.}{0.75em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection.}{0.75em}{}
+\titleformat{\subsubsection}{\normalsize\itshape}{\thesubsubsection.}{0.75em}{}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\textbf{IKKUNA Specification}}
+\rhead{\textbf{MODULES-SPEC-1.1.0-rc3}}
+\cfoot{\thepage}
+
+\hypersetup{colorlinks=true, linkcolor=black, urlcolor=normblue, citecolor=black}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+\newtheorem{specrule}{Rule}[section]
+\newtheorem{requirement}{Requirement}[section]
+\newtheorem{proposition}{Proposition}[section]
+\newtheorem{invariant}{Invariant}[section]
+
+% --- Shorthand macros -----------------------------------------------
+\newcommand{\ONEDGE}{\textsc{OnEdge Energy}}
+\newcommand{\IKKUNA}{\textsc{IKKUNA}}
+\newcommand{\ECME}{\textsc{ECME}}
+\newcommand{\GR}{\textsc{Golden Record}}
+\newcommand{\FB}{\textsc{Fingerprint Baseline}}
+\newcommand{\BESS}{\textsc{BESS}}
+\newcommand{\BMS}{\textsc{BMS}}
+\newcommand{\TEE}{\textsc{TEE}}
+\newcommand{\StandardCo}{\textsc{StandardCo}}
+\newcommand{\SDK}{\textsc{ONEDGE-SDK}}
+\newcommand{\MUST}{\textbf{MUST}}
+\newcommand{\MUSTNOT}{\textbf{MUST NOT}}
+\newcommand{\SHALL}{\textbf{SHALL}}
+\newcommand{\SHOULD}{\textbf{SHOULD}}
+\newcommand{\MAY}{\textbf{MAY}}
+
+% --- Fixed-point notation -------------------------------------------
+\newcommand{\Qfmt}[2]{\ensuremath{\mathsf{Q}#1.#2}}   % \Qfmt{16}{16}
+\newcommand{\qval}[1]{\ensuremath{\mathtt{#1}}}        % hex literal
+
+% --- Physical operators -------------------------------------------
+\newcommand{\ph}{\varphi}       % reaction operator / SOC accumulator
+\newcommand{\sy}{\psi}          % synchrony coefficient
+\newcommand{\dv}{\delta}        % divergence proxy
+\newcommand{\Req}{R_{\mathrm{eq}}}
+\newcommand{\Pnet}{P_{\mathrm{net}}}
+\newcommand{\Tcell}{T_{\mathrm{cell}}}
+\newcommand{\Tamb}{T_{\mathrm{amb}}}
+\newcommand{\Thead}{T_{\mathrm{headroom}}}
+\newcommand{\Dt}{\Delta t}
+\newcommand{\Dphi}{\Delta\ph}
+\newcommand{\Dsoc}{\Delta\mathrm{SOC}}
+% -------------------------------------------------------------------
+
+\begin{document}
+
+% ===================================================================
+\begin{center}
+    {\LARGE \textbf{ONEDGE ENERGY}}\\[0.20cm]
+    {\Large \textbf{Module Extension Specification}}\\[0.15cm]
+    {\large \textbf{MODULES-SPEC-1.1.0-rc3}}\\[0.25cm]
+    {\normalsize \textbf{Normative; under STANDARD axis $\mathsf{S}$-0.0.4 / I-1.1.0-rc3}}\\[0.5cm]
+\end{center}
+
+\begin{tabular}{>{\bfseries}p{4.5cm}p{10.5cm}}
+Issuer:                   & IKKUNA SpA (\StandardCo) \\
+Document Type:            & Normative module-extension specification \\
+Version:                  & MODULES-SPEC-1.1.0-rc3 \\
+I-axis version:           & I-1.1.0-rc3 \\
+S-axis version:           & S-0.0.4 \\
+Status:                   & Draft (Normative) \\
+Issued:                   & 2026-05-19 \\
+Supersedes:               & (none; first issuance) \\
+Companion (Markdown):     & \texttt{docs/MODULES\_SPEC.md} \\
+Parent specifications:    & \texttt{SPECIFICATION.md} §7, §11; \texttt{SECURITY\_MODEL.md} §5 \\
+Cross-references:         & ECME-0.2.0, GRSCHEMA-1.0.0, TEEATTEST-1.0.0, P-1.0.0 \\
+\end{tabular}
+
+\vspace{0.5cm}
+\noindent\textbf{Abstract.}
+This document defines the \SDK{} Module Extension Specification, comprising: (i) the normative Module Extension Contract — the interface every pluggable Runtime module \MUST{} implement; (ii) a fixed-point arithmetic standard (Q16/Q32/Q0 formats, rounding mode, saturation semantics) governing all consensus-critical physical computations; (iii) three Core Physical Operators — the Reaction Operator $\ph$, the Synchrony Coefficient $\sy$, and the Divergence Proxy $\dv$ — with full fixed-point procedures; and (iv) six module-level Physics Firewall Invariants (PF-M1 through PF-M6) that every module \MUST{} enforce on every state-transition step. All definitions are consensus-critical. Any change to operator semantics, formats, or saturation rules requires a \texttt{spec\_version} bump.
+
+\tableofcontents
+\newpage
+
+% ===================================================================
+\section{Introduction and Scope}
+\label{sec:intro}
+% ===================================================================
+
+\subsection{Motivation}
+
+The \SDK{} Runtime is a pure state-transition function (STF) over physical assets (Battery Energy Storage Systems, EV fleets) that produces cryptographic commitments to physical state. The \textit{Physics Firewall} (\texttt{SPECIFICATION.md} §7) prevents any market action from forcing a dispatch that violates hardware safety envelopes; violations are proven infeasible via R1CS constraints under the proof system P-1.0.0.
+
+To support heterogeneous asset types and OEM-specific thermodynamic models without requiring a full Runtime upgrade for each variant, the \SDK{} defines a \textbf{Module Extension Contract}: a narrow, deterministic interface that allows OEM-specific state-transition units to plug into the Runtime while remaining subject to universal Physics Firewall invariants.
+
+\subsection{Scope}
+
+This specification defines:
+\begin{enumerate}[label=\arabic*.]
+    \item The Module Extension Contract (§\ref{sec:contract}).
+    \item The Fixed-Point Arithmetic Standard applicable to all physical operators (§\ref{sec:fixedpoint}).
+    \item Three Core Physical Operators: Reaction Operator $\ph$ (§\ref{sec:phi}), Synchrony Coefficient $\sy$ (§\ref{sec:psi}), Divergence Proxy $\dv$ (§\ref{sec:delta}).
+    \item Module-level Physics Firewall Invariants PF-M1 through PF-M6 (§\ref{sec:invariants}).
+    \item Module-extension reason codes (§\ref{sec:reasoncodes}).
+    \item Conformance requirements (§\ref{sec:conformance}).
+\end{enumerate}
+
+\noindent Parameters referenced by name (e.g., $\mathrm{SOC\_MIN}$, $\mathrm{PSI\_MAX}$) are defined in \texttt{PARAMETERS.md} (to be published in Move 3 of the spec roadmap). This document specifies their \emph{roles} and \emph{Q-format types}; their \emph{values} are governed by \texttt{PARAMETERS.md}.
+
+\subsection{Relation to Other Specifications}
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+\textbf{Document} & \textbf{Version} & \textbf{Relation} \\
+\midrule
+\texttt{SPECIFICATION.md} & 1.1.0-rc3 & Parent; §7 defines Physics Firewall, §11 introduces this spec \\
+\texttt{SECURITY\_MODEL.md} & 1.0 & Invariants I2, I4, I7 extended here to module layer \\
+\texttt{RUNTIME\_ABI.md} & 1.0 & Base reason codes extended in §\ref{sec:reasoncodes} \\
+\texttt{CRYPTO\_DOMAINS.md} & 1.0 & Commitment and transcript label domains \\
+\texttt{PARAMETERS.md} & TBD (Move 3) & All named constants used by operators in §\ref{sec:operators} \\
+ECME-0.2.0 & S-0.0.4 & Reaction-diffusion model; source of $\ph$ operator \\
+GRSCHEMA-1.0.0 & S-0.0.4 & GR public-inputs vector read by $\sy$ operator \\
+TEEATTEST-1.0.0 & S-0.0.4 & Attestation chain for telemetry used by $\sy$, $\dv$ \\
+P-1.0.0 & manifest & Proof system; ZK constraints bind $\ph$ commitments \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+% ===================================================================
+\section{Normative Language}
+\label{sec:normlang}
+% ===================================================================
+
+The key words \MUST{}, \MUSTNOT{}, \SHALL{}, \SHOULD{}, \RECOMMENDED{}, \MAY{}, and \textbf{OPTIONAL} are used as defined in RFC~2119.
+
+% ===================================================================
+\section{Module Extension Contract}
+\label{sec:contract}
+% ===================================================================
+
+\subsection{Module Definition}
+
+\begin{definition}[Module]
+\label{def:module}
+A \textbf{Module} is a deterministic state-transition unit compiled to RISC-V (\texttt{no\_std}) that:
+\begin{enumerate}[label=(\roman*)]
+    \item Is identified by a globally unique \texttt{module\_id}: a 16-byte UUID v5 computed in the namespace \texttt{ONEDGE-SDK/v1/Module} over the canonical module name (UTF-8 encoded).
+    \item Implements all normative entry points in §\ref{sec:entrypoints}.
+    \item Enforces all Physics Firewall invariants PF-M1 through PF-M6 (§\ref{sec:invariants}) on every \texttt{module\_step} invocation.
+    \item Satisfies the Determinism Requirement (§\ref{sec:determinism}).
+\end{enumerate}
+\end{definition}
+
+\subsection{Normative Entry Points}
+\label{sec:entrypoints}
+
+A Module \MUST{} export the following four entry points. All entry points \MUST{} be deterministic.
+
+\begin{specrule}[module\_version]
+\label{rule:version}
+\texttt{module\_version: () -> ModuleVersion}
+
+Returns a structure \texttt{\{module\_id: [u8;16], spec\_version: u32, impl\_version: u32, code\_hash: [u8;32]\}} identifying this module. \texttt{code\_hash} \MUST{} equal the BLAKE2b-256 hash of the compiled RISC-V blob as registered.
+\end{specrule}
+
+\begin{specrule}[module\_step]
+\label{rule:step}
+\texttt{module\_step: (state: PhysicalState, params: ModuleParams) -> StepReceipt}
+
+Executes one state-transition step. \MUST{} be deterministic. \MUST{} enforce PF-M1 through PF-M6 in the order specified in §\ref{sec:invariants} with short-circuit evaluation. On success, \texttt{StepReceipt} \MUST{} contain:
+\begin{itemize}
+    \item \texttt{post\_state\_commitment: [u8;32]} — Keccak-256 of the canonical post-state encoding.
+    \item \texttt{status: u32} — bitmask; bit~0 $=$ \texttt{SATURATED} flag (§\ref{sec:saturation}).
+    \item \texttt{reason\_code: u32} — \texttt{0x0000} on success; a normative code on failure (§\ref{sec:reasoncodes}).
+\end{itemize}
+On constraint violation, \texttt{module\_step} \MUST{} abort (no state written) and return the corresponding reason code.
+\end{specrule}
+
+\begin{specrule}[module\_validate]
+\label{rule:validate}
+\texttt{module\_validate: (state: PhysicalState, params: ModuleParams) -> Validity}
+
+Pre-flight constraint check. \MUST{} complete in $\mathcal{O}(1)$ bounded time and bounded allocations. \MUSTNOT{} perform ZK proof verification. This entry point satisfies Invariant~I7 (Bounded-Cost Execution, \texttt{SECURITY\_MODEL.md} §5).
+\end{specrule}
+
+\begin{specrule}[module\_invariants]
+\label{rule:invariants}
+\texttt{module\_invariants: () -> InvariantSet}
+
+Returns the serialized set of Physics Firewall invariants this module declares and enforces. The Keccak-256 of this output \MUST{} equal the \texttt{invariant\_set\_hash} recorded in the on-chain Module Registry entry for this \texttt{module\_id}.
+\end{specrule}
+
+\subsection{Determinism Requirement}
+\label{sec:determinism}
+
+\begin{requirement}[Module Determinism]
+\label{req:det}
+A Module \MUST NOT{} access wall-clock time, network I/O, filesystem, or nondeterministic RNG. All external inputs \MUST{} flow through \texttt{PhysicalState} or \texttt{ModuleParams}. This requirement extends Invariant~I2 (\texttt{SECURITY\_MODEL.md} §5) to the module layer.
+\end{requirement}
+
+\subsection{Module Registration}
+\label{sec:registration}
+
+Before first use, a Module \MUST{} be registered via a governance-gated \texttt{register\_module} extrinsic. The Registry entry \MUST{} record the following fields.
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+\textbf{Field} & \textbf{Type} & \textbf{Requirement} \\
+\midrule
+\texttt{module\_id} & \texttt{[u8;16]} & UUID v5 (unique). \\
+\texttt{code\_hash} & \texttt{[u8;32]} & BLAKE2b-256 of RISC-V blob. \\
+\texttt{spec\_version\_range} & \texttt{(u32, u32)} & $[\min, \max]$ Runtime \texttt{spec\_version} compatibility. \\
+\texttt{invariant\_set\_hash} & \texttt{[u8;32]} & Keccak-256 of serialized \texttt{InvariantSet}. \\
+\texttt{canonical\_name} & UTF-8, $\le 64$ B & Human-readable identifier. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent A Runtime \MUST{} reject invocations of an unregistered module (\texttt{ERR\_MODULE\_UNREGISTERED}) or a module whose \texttt{spec\_version} is outside the active Runtime compatibility range (\texttt{ERR\_MODULE\_VERSION\_MISMATCH}).
+
+% ===================================================================
+\section{Fixed-Point Arithmetic Standard}
+\label{sec:fixedpoint}
+% ===================================================================
+
+\begin{definition}[Fixed-Point Format]
+\label{def:qformat}
+A fixed-point format $\Qfmt{I}{F}$ represents a rational number with $I$ integer bits (plus one sign bit for signed formats) and $F$ fractional bits, encoded as a two's-complement (signed) or unsigned integer of $I + F$ bits. The real value $v$ corresponding to an encoded integer $n$ is:
+\[
+    v = n \cdot 2^{-F}.
+\]
+\end{definition}
+
+\subsection{Active Formats}
+\label{sec:formats}
+
+\begin{center}
+\begin{tabular}{lllllll}
+\toprule
+\textbf{Symbol} & \textbf{Format} & \textbf{Sign} & \textbf{Total bits} & \textbf{Range} & \textbf{Resolution} & \textbf{Primary use} \\
+\midrule
+Q16 & $\Qfmt{16}{16}$ & Signed & 32 & $\pm 32767.9\overline{9}$ & $\approx 1.526 \times 10^{-5}$ & SOC, temperature, ratios \\
+Q32 & $\Qfmt{32}{32}$ & Signed & 64 & $\pm 2.147 \times 10^9$ & $\approx 2.328 \times 10^{-10}$ & Energy accumulators \\
+Q0  & $\Qfmt{0}{32}$  & Unsigned & 32 & $[0,\;1)$ & $2^{-32}$ & Normalised ratios ($\sy$) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent Constants:
+\[
+    \qval{Q16\_ONE} = \mathtt{0x0001\_0000}, \quad
+    \qval{Q32\_ONE} = \mathtt{0x0000\_0001\_0000\_0000}, \quad
+    \qval{Q0\_ONE}  = \mathtt{0xFFFF\_FFFF}.
+\]
+$\qval{Q0\_ONE}$ represents $1 - 2^{-32}$, the maximum representable value in Q0.
+
+\subsection{Rounding Mode}
+\label{sec:rounding}
+
+\begin{specrule}[Round-Half-to-Even]
+\label{rule:rounding}
+All fixed-point operations \MUST{} use \textbf{round-half-to-even} (banker's rounding, IEEE~754 \texttt{roundTiesToEven}) at every fractional truncation step — that is, whenever an intermediate result wider than the target format is narrowed by discarding low-order bits.
+
+Let $r$ denote the discarded suffix of bits. The rounding decision is:
+\[
+    \text{Round up} \iff r > 2^{F-1} \;\vee\; \bigl(r = 2^{F-1} \wedge \text{last retained bit} = 1\bigr).
+\]
+\end{specrule}
+
+\subsection{Saturation Semantics}
+\label{sec:saturation}
+
+\begin{specrule}[Saturation on Overflow]
+\label{rule:saturation}
+On overflow (result exceeds format maximum) or underflow (result falls below format minimum), an implementation \MUST{} \textbf{saturate} — clamp the result to the boundary value — rather than wrap. Saturation \MUST{} atomically set bit~0 (\texttt{SATURATED}) in \texttt{StepReceipt.status}. The \texttt{SATURATED} flag \MUST{} be propagated into the \GR{} event commitment for that step.
+
+Once \texttt{SATURATED} is set, a module \MUST{} reject subsequent \texttt{module\_step} calls with \texttt{ERR\_SATURATION\_STICKY} until an authorised operator-clearance extrinsic resets the flag (see Invariant PF-M6 in §\ref{sec:invariants}).
+\end{specrule}
+
+\noindent Saturation is a \emph{bounded-overflow} condition, distinct from a \emph{constraint violation}. A saturated step \MUST{} still be committed to state (with \texttt{SATURATED} flag set); a constraint violation \MUST{} abort the step without writing state.
+
+% ===================================================================
+\section{Core Physical Operators}
+\label{sec:operators}
+% ===================================================================
+
+% -------------------------------------------------------------------
+\subsection{Reaction Operator ($\ph$)}
+\label{sec:phi}
+% -------------------------------------------------------------------
+
+\begin{definition}[Reaction Operator]
+\label{def:phi}
+The \textbf{Reaction Operator} $\ph$ is the signed, fixed-point SOC accumulator governing the electrochemical inventory of the asset. At each discrete step $k$, it computes the updated accumulator $\ph_{k+1}$ by coupling net power delivery with resistive dissipation.
+\end{definition}
+
+\subsubsection{Mathematical Statement}
+
+\begin{equation}
+    \ph_{k+1} \;=\; \ph_k + \Dphi_k, \label{eq:phi_update}
+\end{equation}
+where
+\begin{equation}
+    \Dphi_k \;=\; \Bigl(\Pnet_k - \Req(T_k, \mathrm{SOC}_k)\cdot I_k^2\Bigr)\cdot\Dt. \label{eq:delta_phi}
+\end{equation}
+
+\noindent Symbols:
+\begin{align*}
+    \ph_k       &\in \Qfmt{32}{32} & &\text{SOC accumulator at step } k \\
+    \Pnet_k     &\in \Qfmt{16}{16} & &\text{Signed net power (per-unit of nominal capacity)} \\
+    \Req(T,s)   &\in \Qfmt{16}{16} & &\text{Equivalent series resistance (PL table, \texttt{PARAMETERS.md} §3)} \\
+    I_k         &\in \Qfmt{16}{16} & &\text{Instantaneous current} \\
+    \Dt         &\in \Qfmt{16}{16} & &\text{Fixed step duration (constant, \texttt{PARAMETERS.md} §2)} \\
+\end{align*}
+
+\subsubsection{Fixed-Point Procedure (Normative)}
+\label{sec:phi_proc}
+
+\begin{requirement}[Reaction Operator Procedure]
+\label{req:phi}
+An implementation \MUST{} compute $\ph_{k+1}$ by the following procedure:
+\begin{enumerate}[label=\textbf{Step \arabic*.}]
+    \item Load $\ph_k$ as Q32 from the module state.
+    \item Read $\Pnet_k$ as Q16 (signed) from \texttt{PhysicalState}.
+    \item Look up $\Req(T_k, \mathrm{SOC}_k)$ as Q16 from the piecewise-linear resistance table (\texttt{PARAMETERS.md} §3). Interpolation \MUST{} use Q32 intermediate products with Rule~\ref{rule:rounding} applied at each truncation.
+    \item Read $I_k$ as Q16 from \texttt{PhysicalState}. Compute $I_k^2$ as Q32:
+          \[
+              I_k^2|_{\Qfmt{32}{32}} = \bigl(I_k|_{\Qfmt{16}{16}} \times I_k|_{\Qfmt{16}{16}}\bigr) \gg 16,
+          \]
+          applying Rule~\ref{rule:rounding} to the discarded 16 bits.
+    \item Compute $\Req \cdot I_k^2$ as Q32: multiply Q16 $\times$ Q32 (64-bit $\times$ 64-bit product), right-shift by 16 with Rule~\ref{rule:rounding}.
+    \item Compute $\Dphi_k$ as Q32:
+          \[
+              \Dphi_k = \Bigl(\Pnet_k|_{\mathrm{Q32}} - (\Req \cdot I_k^2)|_{\mathrm{Q32}}\Bigr) \cdot \Dt|_{\mathrm{Q16}} \gg 16,
+          \]
+          where $\Pnet_k|_{\mathrm{Q32}}$ is obtained by sign-extending the Q16 value to 64 bits without shifting.
+    \item Accumulate: $\ph_{k+1} = \ph_k + \Dphi_k$ using saturating Q32 signed addition (Rule~\ref{rule:saturation}).
+    \item Clamp: if $\ph_{k+1} < \mathrm{SOC\_MIN\_Q32}$ or $\ph_{k+1} > \mathrm{SOC\_MAX\_Q32}$ (\texttt{PARAMETERS.md} §2), saturate and set \texttt{SATURATED} flag.
+    \item If the pre-clamp value was out of bounds, emit \texttt{ERR\_SOC\_OUT\_OF\_BOUNDS} and abort step (do not write post-state).
+\end{enumerate}
+\end{requirement}
+
+\begin{proposition}[Bounded Step Cost]
+\label{prop:phi_cost}
+The Reaction Operator procedure in Requirement~\ref{req:phi} executes in $\mathcal{O}(1)$ time and $\mathcal{O}(1)$ memory, satisfying Invariant~I7 (\texttt{SECURITY\_MODEL.md} §5), given that the $\Req$ lookup table is of bounded, pre-determined size (\texttt{PARAMETERS.md} §3).
+\end{proposition}
+
+% -------------------------------------------------------------------
+\subsection{Synchrony Coefficient ($\sy$)}
+\label{sec:psi}
+% -------------------------------------------------------------------
+
+\begin{definition}[Synchrony Coefficient]
+\label{def:psi}
+The \textbf{Synchrony Coefficient} $\sy_k \in [0, 1)$ measures the normalised deviation between the \GR-committed state-of-charge and the \BMS-attested physical measurement at step $k$. A value of $0$ indicates perfect synchrony; $\sy_k \to 1$ indicates maximum representable divergence.
+\end{definition}
+
+\subsubsection{Mathematical Statement}
+
+\begin{equation}
+    \sy_k \;=\; \frac{|\ph_k^{\mathrm{committed}} - \ph_k^{\mathrm{physical}}|}{\mathrm{SOC\_MAX} - \mathrm{SOC\_MIN}}, \label{eq:psi}
+\end{equation}
+where $\ph_k^{\mathrm{committed}}$ is the SOC value from the current-period \GR{} public-inputs vector (transcript label \texttt{ONEDGE-SDK/v1/GR/v1.0.0/PublicInputs}, \texttt{CRYPTO\_DOMAINS.md} §3), and $\ph_k^{\mathrm{physical}}$ is the \BMS-attested telemetry value from the admissioned extrinsic.
+
+\subsubsection{Fixed-Point Procedure (Normative)}
+\label{sec:psi_proc}
+
+\begin{requirement}[Synchrony Coefficient Procedure]
+\label{req:psi}
+An implementation \MUST{} compute $\sy_k$ by the following procedure:
+\begin{enumerate}[label=\textbf{Step \arabic*.}]
+    \item Read $\ph_k^{\mathrm{committed}}$ as Q32 from the \GR{} public-inputs vector.
+    \item Read $\ph_k^{\mathrm{physical}}$ as Q32 from the attested telemetry extrinsic (Provenance Tier $\tau \ge 2$ required; see TEEATTEST-1.0.0).
+    \item Compute absolute difference $d_k = |\ph_k^{\mathrm{committed}} - \ph_k^{\mathrm{physical}}|$ as an unsigned Q32 value (two's-complement absolute value applied after signed subtraction).
+    \item Let $\mathrm{RANGE\_Q32} = \mathrm{SOC\_MAX\_Q32} - \mathrm{SOC\_MIN\_Q32}$ (\texttt{PARAMETERS.md} §2); this constant \MUST{} be evaluated once at module initialisation.
+    \item Compute $\sy_k$ as Q0 via 128-bit intermediate division:
+          \[
+              \sy_k|_{\Qfmt{0}{32}} = \left\lfloor \frac{d_k \cdot 2^{32}}{\mathrm{RANGE\_Q32}} \right\rceil_{\mathrm{HTE}},
+          \]
+          where $\lfloor \cdot \rceil_{\mathrm{HTE}}$ denotes truncation with round-half-to-even (Rule~\ref{rule:rounding}).
+    \item If $d_k \ge \mathrm{RANGE\_Q32}$, saturate $\sy_k$ to $\qval{Q0\_ONE}$ and set \texttt{SATURATED} flag.
+    \item If $\sy_k > \mathrm{PSI\_MAX\_Q0}$ (\texttt{PARAMETERS.md} §2), emit \texttt{ERR\_SYNCHRONY\_EXCEEDED} and abort step.
+\end{enumerate}
+\end{requirement}
+
+% -------------------------------------------------------------------
+\subsection{Divergence Proxy ($\dv$)}
+\label{sec:delta}
+% -------------------------------------------------------------------
+
+\begin{definition}[Divergence Proxy]
+\label{def:delta}
+The \textbf{Divergence Proxy} $\dv_k \in [0, 1]$ is a computationally bounded scalar indicator of thermodynamic divergence from the nominal operating envelope. It combines relative thermal headroom and the SOC rate-of-change into a single weighted indicator, approximating thermodynamic stress without requiring full ODE integration.
+\end{definition}
+
+\subsubsection{Mathematical Statement}
+
+\begin{equation}
+    \dv_k \;=\; \alpha \cdot \frac{\Tcell_k - \Tamb_k}{\Thead} \;+\; (1-\alpha)\cdot \frac{|\Dsoc_k|}{\Dsoc_{\max}}, \label{eq:delta}
+\end{equation}
+where:
+\begin{align*}
+    \alpha      &\in \Qfmt{16}{16} & &\text{Thermal weighting coefficient, } \alpha \in (0,1) \text{ (\texttt{PARAMETERS.md} §2)} \\
+    \Tcell_k    &\in \Qfmt{16}{16} & &\text{Cell temperature (°C)} \\
+    \Tamb_k     &\in \Qfmt{16}{16} & &\text{Ambient temperature (°C)} \\
+    \Thead      &\in \Qfmt{16}{16} & &\text{Thermal headroom: } T_{\mathrm{cell,max}} - T_{\mathrm{cell,nom}} \text{ (\texttt{PARAMETERS.md} §2)} \\
+    \Dsoc_k     &= \ph_k - \ph_{k-1} & &\text{SOC increment (Q16, derived from Q32 difference)} \\
+    \Dsoc_{\max}&\in \Qfmt{16}{16} & &\text{Maximum permissible single-step SOC change (\texttt{PARAMETERS.md} §2)} \\
+\end{align*}
+
+\subsubsection{Fixed-Point Procedure (Normative)}
+\label{sec:delta_proc}
+
+\begin{requirement}[Divergence Proxy Procedure]
+\label{req:delta}
+An implementation \MUST{} compute $\dv_k$ by the following procedure:
+\begin{enumerate}[label=\textbf{Step \arabic*.}]
+    \item Compute $T_{\mathrm{diff},k} = \Tcell_k - \Tamb_k$ as Q16 (signed, °C).
+    \item Compute \textbf{term1}: the normalised thermal component:
+          \[
+              \mathrm{term1} = \left\lfloor \frac{T_{\mathrm{diff},k} \cdot \qval{Q16\_ONE}}{\mathrm{T\_HEADROOM\_Q16}} \right\rceil_{\mathrm{HTE}} \in \Qfmt{16}{16}.
+          \]
+          Use a 64-bit intermediate. Clamp result to $[0, \qval{Q16\_ONE}]$.
+    \item Compute $\Dsoc_{k}^{\mathrm{Q32}} = \ph_k - \ph_{k-1}$ as Q32 (signed). Derive Q16 magnitude:
+          \[
+              |\Dsoc_k|_{\mathrm{Q16}} = \bigl|{\Dsoc_{k}^{\mathrm{Q32}}}\bigr| \gg 16
+          \]
+          with round-half-to-even applied to the discarded 16 bits.
+    \item Compute \textbf{term2}: the normalised SOC rate component:
+          \[
+              \mathrm{term2} = \left\lfloor \frac{|\Dsoc_k|_{\mathrm{Q16}} \cdot \qval{Q16\_ONE}}{\mathrm{DSOC\_MAX\_Q16}} \right\rceil_{\mathrm{HTE}} \in \Qfmt{16}{16}.
+          \]
+          Use a 64-bit intermediate. Clamp result to $[0, \qval{Q16\_ONE}]$.
+    \item Compute weighted sum using 64-bit intermediates for each product:
+          \[
+              \dv_k = \Bigl(\underbrace{\alpha \cdot \mathrm{term1}}_{\gg 16} + \underbrace{(\qval{Q16\_ONE} - \alpha) \cdot \mathrm{term2}}_{\gg 16}\Bigr) \in \Qfmt{16}{16}.
+          \]
+          Each product \MUST{} be independently right-shifted by 16 (with Rule~\ref{rule:rounding}) before addition to prevent overflow.
+    \item Clamp $\dv_k$ to $[0, \qval{Q16\_ONE}]$; set \texttt{SATURATED} flag if clamped from above.
+    \item If $\dv_k > \mathrm{DELTA\_MAX\_Q16}$ (\texttt{PARAMETERS.md} §2), emit \texttt{ERR\_THERMAL\_VIOLATION} and abort step.
+\end{enumerate}
+\end{requirement}
+
+\begin{proposition}[Operator Independence]
+\label{prop:independence}
+The three Core Physical Operators $\ph$, $\sy$, $\dv$ are mutually independent as functions of \texttt{PhysicalState}: $\ph_{k+1}$ depends on $(\ph_k, \Pnet_k, \Req, I_k, \Dt)$; $\sy_k$ depends on $(\ph_k^{\mathrm{committed}}, \ph_k^{\mathrm{physical}})$; and $\dv_k$ depends on $(\Tcell_k, \Tamb_k, \ph_k, \ph_{k-1})$. They \MUST{} be evaluated in the order: $\ph \to \sy \to \dv$, as required by the invariant check sequence in §\ref{sec:invariants}.
+\end{proposition}
+
+% ===================================================================
+\section{Physics Firewall Invariants (Module Level)}
+\label{sec:invariants}
+% ===================================================================
+
+Every Module \MUST{} enforce all six invariants below on every \texttt{module\_step} invocation, in the specified order, with short-circuit evaluation on the first violated invariant (subsequent invariants \MUST NOT{} be evaluated after a violation, to preserve the bounded execution cost of Invariant~I7).
+
+A violation \MUST{} cause \texttt{module\_step} to abort without writing post-state, and return the corresponding reason code in \texttt{StepReceipt.reason\_code}.
+
+\begin{invariant}[PF-M1 — SOC Bounds]
+\label{inv:pfm1}
+$\mathrm{SOC\_MIN\_Q32} \;\le\; \ph_{k+1}|_{\mathrm{Q32}} \;\le\; \mathrm{SOC\_MAX\_Q32}$. \\
+Reason code on violation: \texttt{ERR\_SOC\_OUT\_OF\_BOUNDS}.
+\end{invariant}
+
+\begin{invariant}[PF-M2 — Thermal Ceiling]
+\label{inv:pfm2}
+$\Tcell_k|_{\mathrm{Q16}} \;\le\; \mathrm{T\_CELL\_MAX\_Q16}$. \\
+Reason code on violation: \texttt{ERR\_THERMAL\_VIOLATION}.
+\end{invariant}
+
+\begin{invariant}[PF-M3 — Thermal Ramp Rate]
+\label{inv:pfm3}
+$|\Pnet_k - \Pnet_{k-1}||_{\mathrm{Q16}} \;\le\; \mathrm{RAMP\_MAX\_Q16} \cdot \Dt|_{\mathrm{Q16}} \gg 16$. \\
+Reason code on violation: \texttt{ERR\_THERMAL\_VIOLATION}.
+\end{invariant}
+
+\begin{invariant}[PF-M4 — Synchrony Bound]
+\label{inv:pfm4}
+$\sy_k|_{\mathrm{Q0}} \;\le\; \mathrm{PSI\_MAX\_Q0}$. \\
+Reason code on violation: \texttt{ERR\_SYNCHRONY\_EXCEEDED}.
+\end{invariant}
+
+\begin{invariant}[PF-M5 — Divergence Bound]
+\label{inv:pfm5}
+$\dv_k|_{\mathrm{Q16}} \;\le\; \mathrm{DELTA\_MAX\_Q16}$. \\
+Reason code on violation: \texttt{ERR\_THERMAL\_VIOLATION}.
+\end{invariant}
+
+\begin{invariant}[PF-M6 — Saturation Clearance]
+\label{inv:pfm6}
+If the prior \texttt{StepReceipt.status} bit~0 (\texttt{SATURATED}) is set, \texttt{module\_step} \MUST{} be blocked until an authorised operator-clearance extrinsic resets the flag. \\
+Reason code: \texttt{ERR\_SATURATION\_STICKY}.
+\end{invariant}
+
+\noindent Invariants PF-M1 through PF-M5 are evaluated in the order listed, after the corresponding operators ($\ph$, $\sy$, $\dv$) are computed. Invariant PF-M6 \MUST{} be evaluated \emph{first}, before any operator computation.
+
+These module-level invariants extend and refine Invariant~I4 (Physics Firewall Invariant) in \texttt{SECURITY\_MODEL.md} §5.
+
+% ===================================================================
+\section{Reason Codes (Module Extension)}
+\label{sec:reasoncodes}
+% ===================================================================
+
+The following reason codes are normatively introduced by this specification and extend the base set defined in \texttt{RUNTIME\_ABI.md} §2.1. Numeric IDs in the range $[\mathtt{0x0200},\,\mathtt{0x02FF}]$ are reserved for module-extension reason codes under this specification.
+
+\begin{center}
+\begin{tabular}{lrl}
+\toprule
+\textbf{Code} & \textbf{Numeric ID} & \textbf{Meaning} \\
+\midrule
+\texttt{ERR\_MODULE\_UNREGISTERED}          & \texttt{0x0200} & Module ID not in on-chain Module Registry. \\
+\texttt{ERR\_MODULE\_VERSION\_MISMATCH}     & \texttt{0x0201} & Module \texttt{spec\_version} outside active Runtime range. \\
+\texttt{ERR\_MODULE\_INVARIANT\_HASH\_MISMATCH} & \texttt{0x0202} & \texttt{module\_invariants()} hash $\ne$ registered value. \\
+\texttt{ERR\_SYNCHRONY\_EXCEEDED}           & \texttt{0x0210} & $\sy_k > \mathrm{PSI\_MAX\_Q0}$ (Invariant PF-M4). \\
+\texttt{ERR\_SATURATION\_STICKY}            & \texttt{0x0211} & \texttt{SATURATED} flag set; step blocked (Invariant PF-M6). \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+% ===================================================================
+\section{Conformance}
+\label{sec:conformance}
+% ===================================================================
+
+\begin{definition}[MODULES-SPEC-1.1.0-rc3 Conformance]
+\label{def:conformance}
+A Module is \textbf{MODULES-SPEC-1.1.0-rc3 conformant} if and only if all of the following conditions hold:
+\begin{enumerate}[label=(\roman*)]
+    \item All four entry points in §\ref{sec:entrypoints} (Rules~\ref{rule:version}, \ref{rule:step}, \ref{rule:validate}, \ref{rule:invariants}) are implemented with correct signatures.
+    \item All physical operators use Q16/Q32/Q0 formats, round-half-to-even (Rule~\ref{rule:rounding}), and saturation-with-flag (Rule~\ref{rule:saturation}) as specified in §\ref{sec:fixedpoint}.
+    \item All six invariants PF-M1 through PF-M6 (§\ref{sec:invariants}) are enforced in order with short-circuit evaluation on every \texttt{module\_step} call.
+    \item All reason codes in §\ref{sec:reasoncodes} are emitted as specified; base codes from \texttt{RUNTIME\_ABI.md} §2.1 are preserved.
+    \item The module is registered with a valid \texttt{invariant\_set\_hash} matching the output of \texttt{module\_invariants()}.
+    \item The module passes all fixtures in \texttt{conformance-vectors/modules-1.1.0-rc3/} upon publication (Move~2 of the suite roadmap).
+\end{enumerate}
+\end{definition}
+
+Conformance testing is the responsibility of the module author. \StandardCo{} \MAY{} operate a conformance test runner as part of the module registry admission process.
+
+% ===================================================================
+\section*{Appendix A: Notation Summary}
+\label{app:notation}
+% ===================================================================
+
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+\textbf{Symbol} & \textbf{Meaning} \\
+\midrule
+$\ph_k$ & Reaction Operator (SOC accumulator) at step $k$ \\
+$\sy_k$ & Synchrony Coefficient at step $k$ \\
+$\dv_k$ & Divergence Proxy at step $k$ \\
+$\Req(T, s)$ & Equivalent Series Resistance (function of temperature and SOC) \\
+$\Pnet_k$ & Net power at step $k$ (signed, per-unit of nominal capacity) \\
+$\Tcell_k, \Tamb_k$ & Cell and ambient temperatures at step $k$ \\
+$\Thead$ & Thermal headroom ($T_{\mathrm{cell,max}} - T_{\mathrm{cell,nom}}$) \\
+$\Dt$ & Fixed step duration \\
+$\alpha$ & Thermal weighting coefficient for $\dv$ \\
+$\Qfmt{I}{F}$ & Fixed-point format: $I$ integer bits, $F$ fractional bits \\
+\textbf{MUST}, \MUSTNOT & Normative requirements (RFC 2119) \\
+\textbf{SHOULD} & Recommendation (RFC 2119) \\
+\textbf{MAY} & Permission (RFC 2119) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\vspace{1cm}
+\hrule
+\vspace{0.5cm}
+\noindent\small{\textbf{End of MODULES-SPEC-1.1.0-rc3.}\\
+Issuer: IKKUNA SpA (\StandardCo). Document hash (SHA-256 of this source file): to be computed at issuance. Companion Markdown: \texttt{docs/MODULES\_SPEC.md} (normative summary; LaTeX canonical governs in case of conflict).}
+
+\end{document}

@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>ONEDGE ENERGY v0.0.2 — Candidate Specification for Certified BESS Operational Evidence</title>
-  <meta name="description" content="ONEDGE ENERGY v0.0.2 is a specification-hardening update: proposed open standard, candidate specification, and pre-TRL-7 validation anchor for certified BESS operational evidence." />
-  <meta property="og:title" content="ONEDGE ENERGY v0.0.2 — Candidate Specification" />
-  <meta property="og:description" content="Specification-hardening update for Golden Record certification of BESS operational evidence." />
+  <title>ONEDGE ENERGY UVS-2 — Candidate Specification Stack for Verifiable BESS Evidence</title>
+  <meta name="description" content="ONEDGE ENERGY active vector: UVS-2 / S-0.0.4 / I-1.1.0-rc3 / P-1.0.0 / G-1.4.0. Candidate specification stack for Golden Record BESS operational evidence." />
+  <meta property="og:title" content="ONEDGE ENERGY UVS-2 — Active Specification Stack" />
+  <meta property="og:description" content="Current ONEDGE specification stack: Golden Record schema, provenance tiers, BMS-TEE attestation, module extension standard, proof suite, and governance binding." />
   <meta property="og:type" content="website" />
   <meta name="theme-color" content="#0b1220" />
   <style>
@@ -14,15 +14,17 @@
       --ink: #0b1220;
       --ink-2: #202b42;
       --muted: #5a6475;
-      --line: #cfd6df;
-      --paper: #f6f2ea;
-      --panel: #fffaf0;
-      --panel-2: #f0ebdf;
-      --accent: #1c355e;
-      --warn: #7a4b12;
-      --ok: #184c36;
-      --bad: #6d1f1f;
-      --blue: #1f3b63;
+      --line: #cad3d0;
+      --paper: #f4f6f2;
+      --panel: #ffffff;
+      --panel-2: #eef2ef;
+      --accent: #245f5a;
+      --warn: #8a6a16;
+      --ok: #1d6b50;
+      --bad: #7b2e2e;
+      --blue: #28476f;
+      --proof: #5b4a85;
+      --gov: #6f4f2a;
       --mono: "SFMono-Regular", "Roboto Mono", Consolas, "Liberation Mono", monospace;
       --serif: Georgia, "Times New Roman", Times, serif;
       --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -57,7 +59,7 @@
     .brand {
       font-family: var(--mono);
       font-size: 14px;
-      letter-spacing: .08em;
+      letter-spacing: 0;
       text-transform: uppercase;
       white-space: nowrap;
     }
@@ -70,7 +72,7 @@
       font-family: var(--mono);
       font-size: 12px;
       text-transform: uppercase;
-      letter-spacing: .04em;
+      letter-spacing: 0;
     }
 
     .hero {
@@ -88,7 +90,7 @@
       padding: 7px 10px;
       font-family: var(--mono);
       font-size: 12px;
-      letter-spacing: .06em;
+      letter-spacing: 0;
       text-transform: uppercase;
       background: var(--panel);
       margin-bottom: 26px;
@@ -102,15 +104,15 @@
     }
 
     h1 {
-      font-size: clamp(44px, 7.4vw, 92px);
+      font-size: 72px;
       max-width: 980px;
-      letter-spacing: -0.045em;
+      letter-spacing: 0;
     }
 
     .subhead {
       max-width: 840px;
       margin: 28px 0 0;
-      font-size: clamp(18px, 2.1vw, 24px);
+      font-size: 22px;
       color: var(--ink-2);
     }
 
@@ -125,7 +127,7 @@
       padding: 11px 16px;
       font-family: var(--mono);
       font-size: 12px;
-      letter-spacing: .04em;
+      letter-spacing: 0;
       text-transform: uppercase;
       text-decoration: none;
       color: var(--ink);
@@ -166,7 +168,7 @@
     .section-label {
       font-family: var(--mono);
       font-size: 12px;
-      letter-spacing: .08em;
+      letter-spacing: 0;
       text-transform: uppercase;
       color: var(--muted);
       position: sticky;
@@ -175,12 +177,12 @@
     }
 
     h2 {
-      font-size: clamp(32px, 4.4vw, 58px);
-      letter-spacing: -0.035em;
+      font-size: 48px;
+      letter-spacing: 0;
       margin-bottom: 24px;
     }
 
-    h3 { font-size: 25px; letter-spacing: -0.015em; margin-bottom: 8px; }
+    h3 { font-size: 25px; letter-spacing: 0; margin-bottom: 8px; }
     h4 { font-size: 20px; margin-bottom: 8px; }
 
     p { margin: 0 0 18px; max-width: 860px; font-size: 18px; }
@@ -198,6 +200,7 @@
 
     .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 28px; }
     .grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid.four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
     .grid.five { grid-template-columns: repeat(5, minmax(0, 1fr)); }
 
     .card {
@@ -213,7 +216,7 @@
       display: inline-block;
       font-family: var(--mono);
       font-size: 11px;
-      letter-spacing: .06em;
+      letter-spacing: 0;
       text-transform: uppercase;
       margin-bottom: 18px;
       color: var(--muted);
@@ -223,6 +226,8 @@
     .card.breach { border-top: 4px solid var(--bad); }
     .card.opacity { border-top: 4px solid var(--warn); }
     .card.blue { border-top: 4px solid var(--blue); }
+    .card.proof { border-top: 4px solid var(--proof); }
+    .card.governance { border-top: 4px solid var(--gov); }
 
     .formula {
       overflow-x: auto;
@@ -254,7 +259,7 @@
       font-family: var(--mono);
       font-size: 12px;
       text-transform: uppercase;
-      letter-spacing: .06em;
+      letter-spacing: 0;
       color: var(--muted);
       border-right: 1px solid var(--line);
       background: var(--panel-2);
@@ -285,7 +290,7 @@
     .doc-table th {
       font-family: var(--mono);
       font-size: 11px;
-      letter-spacing: .06em;
+      letter-spacing: 0;
       text-transform: uppercase;
       color: var(--muted);
       font-weight: 500;
@@ -305,7 +310,7 @@
       font-family: var(--mono);
       font-size: 12px;
       text-transform: uppercase;
-      letter-spacing: .04em;
+      letter-spacing: 0;
     }
 
     @media (max-width: 980px) {
@@ -313,7 +318,10 @@
       header { align-items: flex-start; }
       nav { justify-content: flex-start; }
       .hero { gap: 32px; }
-      .grid, .grid.five { grid-template-columns: 1fr; }
+      h1 { font-size: 44px; }
+      h2 { font-size: 34px; }
+      .subhead { font-size: 19px; }
+      .grid, .grid.four, .grid.five { grid-template-columns: 1fr; }
       .section-label { position: static; }
       .stack-title { border-right: 0; border-bottom: 1px solid var(--line); }
       .doc-table { display: block; overflow-x: auto; }
@@ -325,67 +333,75 @@
     <header>
       <div class="brand">ONEDGE ENERGY</div>
       <nav aria-label="Primary navigation">
-        <a href="#abstract">Abstract</a>
-        <a href="#hardening">v0.0.2</a>
+        <a href="#vector">Vector</a>
         <a href="#golden-record">Golden Record</a>
-        <a href="#boundary">Boundary</a>
-        <a href="#conformance">Conformance</a>
-        <a href="#claims">Claims</a>
+        <a href="#provenance">Provenance</a>
+        <a href="#modules">Modules</a>
+        <a href="#roadmap">Roadmap</a>
+        <a href="#documents">Documents</a>
       </nav>
     </header>
 
     <main>
       <div class="hero">
         <div>
-          <div class="status">v0.0.2 / Specification-Hardening Update / Candidate Specification / Pre-TRL-7 Validation</div>
-          <h1>A candidate specification for certified BESS operational evidence.</h1>
-          <p class="subhead">ONEDGE ENERGY v0.0.2 hardens the proposed open standard into a more precise public specification: verification boundaries, conformance tiers, threat-model framing, semantic-versioning governance, and a candidate extension for flexible-load and curtailment-provenance certification.</p>
+          <div class="status">UVS-2 / S-0.0.4 / I-1.1.0-rc3 / P-1.0.0 / G-1.4.0</div>
+          <h1>Verifiable BESS evidence across specification, implementation, proof, and governance.</h1>
+          <p class="subhead">ONEDGE ENERGY now presents the active UVS-2 stack: Golden Record reconciliation, byte-level canonical commitments, provenance-tier attestation, the rc3 Module Extension Standard, registered proof primitives, and governance-bound claim discipline.</p>
           <div class="actions">
-            <a class="button primary" href="https://raw.githubusercontent.com/onedge-energy/onedge-energy.github.io/refs/heads/main/public/whitepaper/onedge-energy-whitepaper-latest.pdf" target="_blank" rel="noopener">Read Whitepaper v0.0.2</a>
-            <a class="button" href="#conformance">View Conformance Tiers</a>
+            <a class="button primary" href="#documents">View Spec Index</a>
+            <a class="button" href="public/whitepaper/onedge-energy-whitepaper-latest.pdf" target="_blank" rel="noopener">Open Whitepaper v0.0.2</a>
           </div>
         </div>
-        <aside class="sidecard" aria-label="Whitepaper metadata">
+        <aside class="sidecard" aria-label="Active specification metadata">
           <div><span>Issuer</span><span>IKKUNA SpA</span></div>
           <div><span>Product / Standard</span><span>ONEDGE ENERGY</span></div>
           <div><span>Core Technology</span><span>ECME Kernel</span></div>
-          <div><span>Version</span><span>v0.0.2</span></div>
-          <div><span>Canonical PDF</span><span><a href="https://raw.githubusercontent.com/onedge-energy/onedge-energy.github.io/refs/heads/main/public/whitepaper/onedge-energy-whitepaper-latest.pdf" target="_blank" rel="noopener">Open</a></span></div>
-          <div><span>Release Type</span><span>Specification-hardening update</span></div>
-          <div><span>Supersedes</span><span>v0.0.1</span></div>
-          <div><span>Status</span><span>Proposed open standard / pre-TRL-7</span></div>
+          <div><span>Active Vector</span><span>UVS-2</span></div>
+          <div><span>Standard Axis</span><span>S-0.0.4</span></div>
+          <div><span>Implementation Axis</span><span>I-1.1.0-rc3</span></div>
+          <div><span>Proof Axis</span><span>P-1.0.0</span></div>
+          <div><span>Governance Axis</span><span>G-1.4.0</span></div>
+          <div><span>Status</span><span>Candidate / pre-stable / pre-TRL-7</span></div>
+          <div><span>Next Root Target</span><span>S-0.1.0 / I-1.1.0</span></div>
         </aside>
       </div>
 
       <section id="abstract">
         <div class="section-label">01 / Abstract</div>
         <div>
-          <h2>Certified coordination is the next bottleneck.</h2>
-          <p class="lead">Renewable-heavy power systems are entering a battery-intensive phase where the bottleneck is no longer only generation, but certified coordination of flexibility assets under physical, financial, regulatory, operational, and warranty constraints.</p>
-          <p>ONEDGE ENERGY, powered by IKKUNA's ECME Kernel, is presented as a proposed open standard and candidate specification for BESS operational evidence. Its central object is the Golden Record: a cryptographically committed operational evidence object that classifies each certified event as Compliant, Breach, or Opacity.</p>
-          <div class="quote">Open standard at the interface. Sovereign proof authority at the core.</div>
+          <h2>From whitepaper to active specification stack.</h2>
+          <p class="lead">Renewable-heavy power systems are entering a battery-intensive phase where the bottleneck is no longer only generation, but evidence-governed coordination of flexibility assets under physical, financial, regulatory, operational, and warranty constraints.</p>
+          <p>ONEDGE ENERGY remains a proposed open standard and candidate specification. The public surface now reflects the active four-axis version vector rather than only the original whitepaper: the Standard axis defines the Golden Record, the Implementation axis defines SDK/runtime behavior, the Proof axis registers cryptographic primitives, and the Governance axis binds public claims and commercial regimes.</p>
+          <div class="quote">Open interface. Canonical evidence. Governance-bound claims.</div>
         </div>
       </section>
 
-      <section id="hardening">
-        <div class="section-label">02 / v0.0.2 Delta</div>
+      <section id="vector">
+        <div class="section-label">02 / Active Vector</div>
         <div>
-          <h2>From public whitepaper to specification discipline.</h2>
-          <p>Version v0.0.2 supersedes v0.0.1 and introduces stricter candidate-standard controls. The landing page should now foreground the document as a specification-hardening update, not merely a strategic introduction.</p>
-          <div class="grid two">
+          <h2>UVS-2 separates four maturity tracks.</h2>
+          <p>As of 2026-07-14, the manifest active vector is <span class="mono">UVS-2 / S-0.0.4 / I-1.1.0-rc3 / P-1.0.0 / G-1.4.0</span>. The axes are linked by compatibility rules, but they are not the same artifact.</p>
+          <div class="grid four">
             <article class="card blue">
-              <span class="tag">Added in v0.0.2</span>
-              <ul>
-                <li>explicit verification boundary;</li>
-                <li>conformance tiers;</li>
-                <li>threat-model framing;</li>
-                <li>candidate flexible-load / curtailment-provenance extension;</li>
-                <li>document stratification and semantic-versioning governance.</li>
-              </ul>
+              <span class="tag">S-0.0.4</span>
+              <h3>Standard</h3>
+              <p>Extends UVS to UVS-2, reconciles the Golden Record definition, formalizes the Fingerprint Baseline, and registers GRSCHEMA, TEEATTEST, and THREATMTX.</p>
             </article>
             <article class="card">
-              <span class="tag">Claim discipline</span>
-              <p>v0.0.2 remains pre-TRL-7. It does not claim industry adoption, financial guarantees, OEM acceptance, regulatory approval, CEN endorsement, EPRI endorsement, or final standard status.</p>
+              <span class="tag">I-1.1.0-rc3</span>
+              <h3>Implementation</h3>
+              <p>Promotes the SDK bundle to rc3 and adds the Module Extension Standard for deterministic pluggable Runtime modules.</p>
+            </article>
+            <article class="card proof">
+              <span class="tag">P-1.0.0</span>
+              <h3>Proof</h3>
+              <p>Registers Ristretto255/Pedersen commitments, Bulletproofs, R1CS, Keccak-256, and domain-separated transcript labels.</p>
+            </article>
+            <article class="card governance">
+              <span class="tag">G-1.4.0</span>
+              <h3>Governance</h3>
+              <p>Adds a governed advancement state machine, compatibility matrix, hash-frozen release capsule, historical replay, containment, and public-legibility gates. This technical advancement does not alter or represent the execution status of any commercial instrument.</p>
             </article>
           </div>
         </div>
@@ -403,21 +419,43 @@
       <section id="golden-record">
         <div class="section-label">04 / Golden Record</div>
         <div>
-          <h2>Prove compliance, prove breach, or flag opacity.</h2>
-          <p>The Golden Record turns operational behavior into certified evidence by binding asset state, dispatch context, telemetry provenance, operating-envelope constraints, state-transition logic, and verification artifacts into an auditable record.</p>
+          <h2>The Golden Record has one canonical definition.</h2>
+          <p>S-0.0.4 reconciles the prior whitepaper, oracle, SDK, bridge, and governance descriptions into one object: <span class="mono">GR := (Commitment, Classification, Provenance, Binding)</span>. The Sovereign Operational Certificate is the contractual alias of the same object.</p>
+          <div class="grid four">
+            <article class="card blue">
+              <span class="tag">Commitment</span>
+              <h3>State-bound</h3>
+              <p>A cryptographic commitment to event state, dispatch, telemetry, envelope, transition, and proof artifact.</p>
+            </article>
+            <article class="card">
+              <span class="tag">Classification</span>
+              <h3>Three-state</h3>
+              <p>The ternary outcome <span class="mono">Compliant / Breach / Opacity</span>, evaluated against a required provenance tier.</p>
+            </article>
+            <article class="card proof">
+              <span class="tag">Provenance</span>
+              <h3>Attested</h3>
+              <p>The chain of signing roots, freshness anchors, and continuity proofs that justify the attained telemetry tier.</p>
+            </article>
+            <article class="card governance">
+              <span class="tag">Binding</span>
+              <h3>Cross-axis</h3>
+              <p>The active <span class="mono">(S, I, P, G)</span> regimes under which the record was issued and audited.</p>
+            </article>
+          </div>
           <div class="grid">
             <article class="card compliant">
-              <span class="tag">State 01</span>
+              <span class="tag">Outcome 01</span>
               <h3>Compliant</h3>
               <p>Approved telemetry is available and the asset respected its declared physical, operational, warranty, and contractual envelope.</p>
             </article>
             <article class="card breach">
-              <span class="tag">State 02</span>
+              <span class="tag">Outcome 02</span>
               <h3>Breach</h3>
               <p>Approved telemetry is available and the event operated outside the declared envelope, supporting attribution and warranty-defense logic.</p>
             </article>
             <article class="card opacity">
-              <span class="tag">State 03</span>
+              <span class="tag">Outcome 03</span>
               <h3>Opacity</h3>
               <p>Telemetry provenance fails or the evidentiary substrate is incomplete, corrupted, delayed, inconsistent, manipulated, or physically unavailable.</p>
             </article>
@@ -427,27 +465,23 @@
       </section>
 
       <section id="formalization">
-        <div class="section-label">05 / Formal Logic</div>
+        <div class="section-label">05 / Canonical Schema</div>
         <div>
-          <h2>Event-indexed certification logic.</h2>
-          <p>At the certification layer, BESS operation is observed as an endogenous sequence of operational events indexed by <span class="mono">k ∈ N</span>. The event index advances only when a new observable state transition occurs.</p>
-          <div class="formula">xₖ₊₁ = Tθ(xₖ, uₖ, yₖ, dₖ)
-subject to: g(xₖ, uₖ; θ) ≤ 0
+          <h2>Bit-identical commitments across runtimes.</h2>
+          <p>GRSCHEMA-1.0.0 defines the byte-level canonical schema for event commitments, period aggregation, and verifier-side public inputs. Under P-1.0.0, the canonical commitment hash is Keccak-256 over the canonical byte sequence and transcript label.</p>
+          <div class="formula">GR_k := H_P(
+  "ONEDGE-SDK/v1/GR/v1.0.0/Event" ||
+  u32_LE(label_length) ||
+  canonical_preimage_k
+)
 
-P(yₖ) = 1 if required telemetry is complete, authentic, sequenced,
-        and derived from approved asset-originated sources;
-        0 otherwise.
-
-E(xₖ, uₖ; θ) = 1 if g(xₖ, uₖ; θ) ≤ 0;
-               0 otherwise.
-
-σₖ =
-  Opacity   if P(yₖ) = 0
-  Compliant if P(yₖ) = 1 and E(xₖ, uₖ; θ) = 1
-  Breach    if P(yₖ) = 1 and E(xₖ, uₖ; θ) = 0
-
-GRₖ = h(xₖ, uₖ, dₖ, yₖ, θ, P(yₖ), E(xₖ,uₖ;θ), σₖ, xₖ₊₁, πₖ, GRₖ₋₁)</div>
-          <p>A valid Golden Record must satisfy state consistency, constraint evaluation, telemetry provenance, truth classification, and cryptographic integrity.</p>
+Required conformance properties:
+- explicit little-endian integer widths;
+- u32-LE length-prefixed vectors;
+- ordered telemetry vectors;
+- domain-separated transcript labels;
+- exact reproduction of conformance vectors.</div>
+          <p>S-0.0.4 publishes deterministic GRSCHEMA vectors for Compliant, Breach, and Opacity cases. Module-operator fixtures for <span class="mono">phi</span>, <span class="mono">psi</span>, and <span class="mono">delta</span> remain open in Move 2.</p>
         </div>
       </section>
 
@@ -462,8 +496,8 @@ GRₖ = h(xₖ, uₖ, dₖ, yₖ, θ, P(yₖ), E(xₖ,uₖ;θ), σₖ, xₖ₊�
                 <li>ingest baselined telemetry;</li>
                 <li>evaluate declared operating envelopes;</li>
                 <li>classify events as Compliant, Breach, or Opacity;</li>
-                <li>produce audit-supporting certificates;</li>
-                <li>reduce evidentiary ambiguity;</li>
+                <li>produce Golden Record / SOC evidence artifacts;</li>
+                <li>reduce, but not eliminate, evidentiary ambiguity;</li>
                 <li>support lender, OEM, owner, operator, auditor, and regulatory diligence.</li>
               </ul>
             </article>
@@ -475,49 +509,81 @@ GRₖ = h(xₖ, uₖ, dₖ, yₖ, θ, P(yₖ), E(xₖ,uₖ;θ), σₖ, xₖ₊�
                 <li>create telemetry where hardware telemetry does not exist;</li>
                 <li>certify compliance where telemetry provenance fails;</li>
                 <li>auto-resolve legal disputes or replace lender diligence;</li>
-                <li>guarantee WACC, LTSA, warranty, or degradation outcomes.</li>
+                <li>guarantee WACC, LTSA, warranty, regulatory, or degradation outcomes.</li>
               </ul>
             </article>
           </div>
         </div>
       </section>
 
-      <section id="conformance">
-        <div class="section-label">07 / Conformance</div>
+      <section id="provenance">
+        <div class="section-label">07 / Provenance</div>
         <div>
-          <h2>Incremental adoption through conformance tiers.</h2>
-          <p>v0.0.2 introduces preliminary conformance tiers so an asset owner, OEM, lender, or operator can adopt the standard progressively rather than through a single disruptive integration event.</p>
+          <h2>Evidence quality is tiered, not assumed.</h2>
+          <p>The active manifest carries a Tier-5 provenance scheme. Levels 0 through 4 align observed telemetry, soft signatures, hardware attestation, BMS-TEE silicon roots, and ZK-continuity into explicit minimum evidence thresholds.</p>
           <div class="grid five">
-            <article class="card compact"><span class="tag">Level 0</span><h3>Observed</h3><p>Telemetry observed, no certification.</p></article>
-            <article class="card compact"><span class="tag">Level 1</span><h3>Baselined</h3><p>Approved asset-originated telemetry sources mapped to requirements.</p></article>
-            <article class="card compact"><span class="tag">Level 2</span><h3>Classified</h3><p>Events classified as Compliant, Breach, or Opacity.</p></article>
-            <article class="card compact"><span class="tag">Level 3</span><h3>Reported</h3><p>Lender, OEM, owner, and operator reporting formats generated.</p></article>
-            <article class="card compact"><span class="tag">Level 4</span><h3>Certified</h3><p>Full Golden Record certification under StandardCo validation.</p></article>
+            <article class="card compact"><span class="tag">Level 0 / τ0</span><h3>Unverified</h3><p>No signing root, freshness, or continuity requirement.</p></article>
+            <article class="card compact"><span class="tag">Level 1 / τ1</span><h3>Soft-signed</h3><p>Operator-key signing with freshness requirement.</p></article>
+            <article class="card compact"><span class="tag">Level 2 / τ2</span><h3>Hardware</h3><p>TPM/HSM/TEE at node boundary with freshness.</p></article>
+            <article class="card compact"><span class="tag">Level 3 / τ3</span><h3>BMS-TEE</h3><p>OEM silicon, StandardCo registry, device-key chain.</p></article>
+            <article class="card compact"><span class="tag">Level 4 / τ4</span><h3>ZK-continuity</h3><p>Tier 3 plus ZK-verified thermodynamic continuity.</p></article>
           </div>
+          <p>TEEATTEST-1.0.0 is normative for telemetry claiming <span class="mono">τ ≥ 3</span>. It defines the StandardCo Root → OEM Root → Device Key chain, freshness anchors, revocation, and tier binding.</p>
         </div>
       </section>
 
       <section id="threat-model">
         <div class="section-label">08 / Threat Model</div>
         <div>
-          <h2>Refuse to certify defective evidence.</h2>
-          <p>The v0.0.2 threat model explicitly includes missing telemetry, corrupted telemetry, delayed or non-sequenced telemetry, sensor drift, manipulated sensor feeds, BMS / SCADA / meter inconsistencies, data replay, unauthorized schema modification, model drift, false curtailment claims, false compliance claims, false breach accusations, OEM data asymmetry, operator misreporting, dispatch-envelope mismatch, commercial misrepresentation, and attempts to treat opacity as compliance.</p>
-          <div class="quote">The three-state model reduces these threats by refusing to certify compliance where the evidentiary substrate is defective.</div>
+          <h2>Withhold compliant classification when evidence is defective.</h2>
+          <p>THREATMTX-1.0.0 maps the original seventeen threats plus two derived threats, opacity-as-compliance and commercial misrepresentation, to concrete mitigation surfaces across provenance tiers, Golden Record schema rules, TEE verification, operator controls, SDK invariants, and governance controls.</p>
+          <div class="quote">The three-state model reduces these threats by withholding Compliant classification where the evidentiary substrate is defective.</div>
+        </div>
+      </section>
+
+      <section id="modules">
+        <div class="section-label">09 / Modules</div>
+        <div>
+          <h2>rc3 adds deterministic module extensions.</h2>
+          <p>I-1.1.0-rc3 introduces the Module Extension Standard for OEM-specific thermodynamic models without a full Runtime upgrade for each asset variant. Modules remain deterministic RISC-V <span class="mono">no_std</span> state-transition units subject to universal Physics Firewall invariants.</p>
+          <div class="grid three">
+            <article class="card blue">
+              <span class="tag">phi / φ</span>
+              <h3>Reaction Operator</h3>
+              <p>Q32 SOC accumulator coupling net power with resistive dissipation.</p>
+            </article>
+            <article class="card proof">
+              <span class="tag">psi / ψ</span>
+              <h3>Synchrony Coefficient</h3>
+              <p>Q0 normalized deviation between GR-committed SOC and BMS-attested SOC.</p>
+            </article>
+            <article class="card governance">
+              <span class="tag">delta / δ</span>
+              <h3>Divergence Proxy</h3>
+              <p>Q16 bounded stress indicator combining thermal headroom and SOC rate.</p>
+            </article>
+          </div>
+          <div class="stack">
+            <div class="stack-row"><div class="stack-title">Entry Points</div><div class="stack-body"><span class="mono">module_version</span>, <span class="mono">module_step</span>, <span class="mono">module_validate</span>, and <span class="mono">module_invariants</span>.</div></div>
+            <div class="stack-row"><div class="stack-title">Arithmetic</div><div class="stack-body">Q16/Q32/Q0 fixed-point formats, round-half-to-even truncation, saturating arithmetic, and sticky saturation clearance.</div></div>
+            <div class="stack-row"><div class="stack-title">Invariants</div><div class="stack-body">PF-M1 through PF-M6: SOC bounds, thermal ceiling, ramp rate, synchrony bound, divergence bound, and saturation clearance.</div></div>
+            <div class="stack-row"><div class="stack-title">Reason Codes</div><div class="stack-body">Module-extension codes occupy <span class="mono">0x0200..0x02FF</span>, including unregistered module, version mismatch, invariant hash mismatch, synchrony exceeded, and saturation sticky.</div></div>
+          </div>
         </div>
       </section>
 
       <section id="stack">
-        <div class="section-label">09 / Stack</div>
+        <div class="section-label">10 / Runtime Stack</div>
         <div>
-          <h2>Open interface. Sovereign proof core. Physical asset layer.</h2>
+          <h2>Open architecture around a protected proof core.</h2>
           <div class="stack">
             <div class="stack-row">
-              <div class="stack-title">Open / Semi-Open Layer</div>
-              <div class="stack-body">Certificate schema, telemetry categories, provenance requirements, operating-envelope fields, audit interface, API-level submission logic, conformance terminology, governance principles, antitrust-safe access criteria, and reporting categories.</div>
+              <div class="stack-title">Open / Public Surface</div>
+              <div class="stack-body">Public interfaces, schemas, Runtime ABI, cryptographic domain labels, XAM message structure, conformance vectors, audit-facing terminology, and module registry requirements.</div>
             </div>
             <div class="stack-row">
-              <div class="stack-title">Sovereign IKKUNA Layer</div>
-              <div class="stack-body">ECME Kernel, deterministic optimization engine, physical state-transition verification, cryptographic proof architecture, Golden Record issuance authority, calibration methodology, certification methodology, reference validator, proof circuits, and StandardCo governance authority.</div>
+              <div class="stack-title">Protected Core</div>
+              <div class="stack-body">ECME Kernel Runtime, proprietary proof circuits, internal DATA Codec implementation, calibration methodology, and commercial proof services remain governed by IKKUNA / StandardCo boundaries.</div>
             </div>
             <div class="stack-row">
               <div class="stack-title">Physical Asset Layer</div>
@@ -527,79 +593,74 @@ GRₖ = h(xₖ, uₖ, dₖ, yₖ, θ, P(yₖ), E(xₖ,uₖ;θ), σₖ, xₖ₊�
         </div>
       </section>
 
-      <section id="extension">
-        <div class="section-label">10 / Candidate Extension</div>
-        <div>
-          <h2>Flexible-load and curtailment-provenance certification.</h2>
-          <p>v0.0.2 introduces flexible-load and curtailment-provenance certification only as a Candidate Extension. It is not part of the initial validated BESS warranty-certification claim set.</p>
-          <p>A flexible load may claim that it operates exclusively, preferentially, or conditionally on curtailed or excess energy. ONEDGE treats that claim as evidentiary: it requires metered energy provenance, dispatch context, authorized system / settlement / metering records, and the same Compliant / Breach / Opacity classification discipline.</p>
-          <div class="quote">ONEDGE classifies evidence against declared inputs. It does not replace system operators, market settlement systems, or applicable regulatory records.</div>
-        </div>
-      </section>
-
       <section id="governance">
         <div class="section-label">11 / Versioned Governance</div>
         <div>
-          <h2>Document stratification and semantic versioning.</h2>
-          <p>v0.0.2 introduces specification-level version discipline to prevent silent schema drift during TRL-7 validation and future standard-formation processes.</p>
+          <h2>Governance is now part of the version vector.</h2>
+          <p>S-0.0.4 extends the versioning scheme to UVS-2 by adding the Governance axis. Golden Record events embed a governance binding so the technical record can be attributed to the frozen commercial regime under which it was issued, without changing the ternary classification outcome.</p>
           <div class="grid">
             <article class="card">
-              <span class="tag">Public Specification</span>
-              <h3>Standard-facing</h3>
-              <p>Sanitized abstract definitions, public schema language, and candidate-standard posture.</p>
+              <span class="tag">Term Parity</span>
+              <h3>One vocabulary</h3>
+              <p>Golden Record, SOC, ECME Kernel, StandardCo, MarketCo, and governance-bound terms resolve to canonical sources.</p>
             </article>
-            <article class="card">
-              <span class="tag">Confidential Data Room</span>
-              <h3>Validation-facing</h3>
-              <p>Architecture, OEM strategy, legal mapping, validation artifacts, lender diligence materials, and certificate samples.</p>
+            <article class="card governance">
+              <span class="tag">Antitrust-safe Surface</span>
+              <h3>Access discipline</h3>
+              <p>Third-party access surfaces are governed by the prevailing G-axis terms and cannot silently drift from them.</p>
             </article>
-            <article class="card">
-              <span class="tag">Internal StandardCo</span>
-              <h3>Proof-facing</h3>
-              <p>Proof logic, patentable claims, implementation details, and trade-secret boundaries.</p>
+            <article class="card proof">
+              <span class="tag">Manifest Binding</span>
+              <h3>Compatibility gate</h3>
+              <p>The manifest links compatible S, I, P, and G versions; unregistered governance bindings are rejected by spec rule.</p>
+            </article>
+            <article class="card compliant">
+              <span class="tag">ADVANCEMENT-1.0.0</span>
+              <h3>Explicit activation</h3>
+              <p>Recommendation, proposal, lock-in, activation, enforcement and retirement are distinct states. Unknown successor profiles fail closed, and public status must match the registered release tuple.</p>
             </article>
           </div>
         </div>
       </section>
 
-      <section id="validation">
-        <div class="section-label">12 / TRL-7 Path</div>
+      <section id="roadmap">
+        <div class="section-label">12 / Roadmap</div>
         <div>
-          <h2>The public specification anchor for the future TRL-7 data room.</h2>
-          <p>This whitepaper is not the Data Room itself. It functions as the public specification anchor. The proposed TRL-7 Data Room should contain private validation evidence, legal scoping materials, OEM / warranty mappings, lender diligence artifacts, telemetry summaries, and certificate samples linked to the applicable v0.0.2 schema.</p>
-          <ol>
-            <li><strong>Define the certification object:</strong> dispatch compliance, warranty support, OEM defense, lender diligence, operator attribution, telemetry provenance, breach record, and opacity-event record.</li>
-            <li><strong>Reference deployment:</strong> TRL-7 shadow-mode validation on real assets under real conditions.</li>
-            <li><strong>Lender and OEM legibility:</strong> convert certified evidence into reusable diligence and warranty language.</li>
-            <li><strong>Governance file:</strong> document that the standard is open at the interface, merit-based, interoperable, non-coercive, and not a foreclosure tool.</li>
-            <li><strong>Institutional adoption:</strong> build referenceability across banks, OEMs, owners, operators, validators, and standard institutions.</li>
-          </ol>
+          <h2>rc3 is active; root release remains ahead.</h2>
+          <p>The next root release target is <span class="mono">S-0.1.0 / I-1.1.0</span>. The landing page reflects Move 1 completion while keeping Moves 2 through 4 open.</p>
+          <div class="grid four">
+            <article class="card compliant"><span class="tag">Move 1 / Complete</span><h3>Modules rc3</h3><p>Module Extension Standard, LaTeX canonical, SDK bundle rc3, and manifest registration.</p></article>
+            <article class="card"><span class="tag">Move 2 / Open</span><h3>Vectors</h3><p>XAM, crypto-domain, runtime ABI, and module operator conformance fixtures.</p></article>
+            <article class="card"><span class="tag">Move 3 / Open</span><h3>Parameters</h3><p>PARAMETERS.md and INVARIANTS.md registries for defaults, Q-formats, tolerances, and firewall values.</p></article>
+            <article class="card"><span class="tag">Move 4 / Open</span><h3>Reference Runtime</h3><p>Reference module pseudo-implementation and executable conformance fixtures.</p></article>
+          </div>
         </div>
       </section>
 
       <section id="claims">
         <div class="section-label">13 / Claims Discipline</div>
         <div>
-          <h2>Bounded claims for a pre-TRL-7 candidate specification.</h2>
+          <h2>Bounded claims for a pre-stable candidate stack.</h2>
           <div class="grid two">
             <article class="card">
               <span class="tag">Claims made</span>
               <ul>
-                <li>ONEDGE ENERGY is a proposed open standard for certified BESS operational evidence.</li>
-                <li>ONEDGE ENERGY is a candidate specification in pre-TRL-7 validation status.</li>
-                <li>ONEDGE ENERGY requires baselined telemetry provenance.</li>
-                <li>ONEDGE ENERGY can classify certified events as compliant, breached, or opaque.</li>
-                <li>ONEDGE ENERGY is designed to reduce evidentiary ambiguity.</li>
+                <li>ONEDGE ENERGY has an active UVS-2 vector registered in the manifest.</li>
+                <li>S-0.0.4 defines the canonical Golden Record and related S-axis artifacts.</li>
+                <li>I-1.1.0-rc3 is a release-candidate SDK/spec bundle with module-extension rules.</li>
+                <li>P-1.0.0 registers the proof primitives and transcript labels used by the stack.</li>
+                <li>The system is designed to reduce evidentiary ambiguity by classifying records as Compliant, Breach, or Opacity.</li>
               </ul>
             </article>
             <article class="card">
               <span class="tag">Claims not made</span>
               <ul>
+                <li>It is not the S-0.1.0 / I-1.1.0 root release.</li>
                 <li>It is not already an adopted industry standard.</li>
                 <li>It has not completed TRL-7 validation.</li>
                 <li>It does not guarantee lower WACC or LTSA costs.</li>
                 <li>It does not guarantee warranty approval or prevent degradation.</li>
-                <li>It does not replace CEN dispatch, OEM monitoring systems, or authorized curtailment records.</li>
+                <li>It does not replace CEN dispatch, OEM monitoring systems, authorized market records, or regulatory determinations.</li>
               </ul>
             </article>
           </div>
@@ -608,22 +669,24 @@ GRₖ = h(xₖ, uₖ, dₖ, yₖ, θ, P(yₖ), E(xₖ,uₖ;θ), σₖ, xₖ₊�
       </section>
 
       <section id="documents">
-        <div class="section-label">14 / Public Data Room</div>
+        <div class="section-label">14 / Spec Index</div>
         <div>
           <h2>Document-first institutional interface.</h2>
-          <p>The landing page should serve as the public specification index for ONEDGE ENERGY v0.0.2. Each artifact should be directly accessible, versioned, dated, and, where appropriate, hash-addressed.</p>
-          <table class="doc-table" aria-label="ONEDGE ENERGY v0.0.2 document index">
+          <p>This static page now indexes the active public-facing specification surfaces and keeps the original whitepaper as the archived public anchor.</p>
+          <table class="doc-table" aria-label="ONEDGE ENERGY active specification document index">
             <thead>
               <tr><th>Document</th><th>Status</th><th>Version</th><th>Purpose</th></tr>
             </thead>
             <tbody>
-              <tr><td><a href="https://raw.githubusercontent.com/onedge-energy/onedge-energy.github.io/refs/heads/main/public/whitepaper/onedge-energy-whitepaper-latest.pdf" target="_blank" rel="noopener">ONEDGE ENERGY Whitepaper</a></td><td>Current public anchor</td><td class="mono">v0.0.2</td><td>Specification-hardening update and public candidate-standard narrative.</td></tr>
-              <tr><td>Golden Record State Model</td><td>Candidate specification</td><td class="mono">v0.0.2</td><td>Compliant / Breach / Opacity formal classification logic.</td></tr>
-              <tr><td>Verification Boundary Note</td><td>Candidate specification</td><td class="mono">v0.0.2</td><td>Precise statement of what ONEDGE does and does not do.</td></tr>
-              <tr><td>Conformance Tiers</td><td>New in v0.0.2</td><td class="mono">v0.0.2</td><td>Level 0 to Level 4 adoption path from observed telemetry to full Golden Record certification.</td></tr>
-              <tr><td>Threat Model</td><td>New in v0.0.2</td><td class="mono">v0.0.2</td><td>Adversarial, operational, and evidentiary failure modes.</td></tr>
-              <tr><td>Flexible-Load / Curtailment-Provenance Extension</td><td>Candidate extension</td><td class="mono">v0.0.2</td><td>Non-core extension for curtailment-powered flexible-load evidence claims.</td></tr>
-              <tr><td>TRL-7 Data Room Index</td><td>Preparing</td><td class="mono">v0.0.2</td><td>Private validation evidence, legal scoping, OEM mappings, lender materials, telemetry summaries, and certificate samples.</td></tr>
+              <tr><td><a href="public/whitepaper/onedge-energy-whitepaper-latest.pdf" target="_blank" rel="noopener">ONEDGE ENERGY Whitepaper</a></td><td>Archived public anchor</td><td class="mono">S-0.0.2</td><td>Original candidate-standard narrative and public whitepaper.</td></tr>
+              <tr><td><a href="public/specs/OnEdge_Energy_SpecHardening_v0.0.4.pdf" target="_blank" rel="noopener">Spec Hardening Note</a></td><td>Active S-axis hardening</td><td class="mono">S-0.0.4</td><td>UVS-2, Golden Record reconciliation, Fingerprint Baseline, and defined-term parity.</td></tr>
+              <tr><td><a href="public/specs/OnEdge_GR_Canonical_Schema_v1.0.0.pdf" target="_blank" rel="noopener">Golden Record Canonical Schema</a></td><td>Active S-axis schema</td><td class="mono">GRSCHEMA-1.0.0</td><td>Byte-level event commitment, aggregate root, public-input vector, and cross-runtime conformance.</td></tr>
+              <tr><td><a href="public/specs/OnEdge_BMS_TEE_Attestation_v1.0.0.pdf" target="_blank" rel="noopener">BMS-TEE Attestation</a></td><td>Active S-axis attestation</td><td class="mono">TEEATTEST-1.0.0</td><td>Three-layer attestation chain, freshness anchors, revocation, and tier mapping for τ ≥ 3.</td></tr>
+              <tr><td><a href="public/specs/OnEdge_Threat_Mitigation_Matrix_v1.0.0.pdf" target="_blank" rel="noopener">Threat Mitigation Matrix</a></td><td>Active S-axis coverage</td><td class="mono">THREATMTX-1.0.0</td><td>Threat-to-mitigation mapping across provenance, schema, TEE, operator, SDK, and governance surfaces.</td></tr>
+              <tr><td><a href="public/specs/ONEDGE_Protocol_Advancement_Standard_v1.0.0.md" target="_blank" rel="noopener">Protocol Advancement Standard</a></td><td>Active G-axis governance</td><td class="mono">ADVANCEMENT-1.0.0</td><td>Compatibility classes, qualification, release capsules, activation/enforcement states, historical replay, containment, documentation and public-legibility gates.</td></tr>
+              <tr><td><a href="public/specs/onedge-sdk-spec-bundle-rc3.zip" target="_blank" rel="noopener">ONEDGE SDK Spec Bundle</a></td><td>Active I-axis RC</td><td class="mono">I-1.1.0-rc3</td><td>SDK specification, security model, Runtime ABI, crypto domains, XAM, and MODULES_SPEC.md.</td></tr>
+              <tr><td><a href="public/specs/OnEdge_Modules_Spec_v1.1.0-rc3.tex" target="_blank" rel="noopener">Module Extension Canonical</a></td><td>Active I-axis RC canonical</td><td class="mono">1.1.0-rc3</td><td>LaTeX authoritative module contract, Q-format arithmetic, physical operators, PF-M invariants, and reason codes.</td></tr>
+              <tr><td><a href="public/specs/ECME_on_BESS.pdf" target="_blank" rel="noopener">ECME on BESS Bridge</a></td><td>Active S-axis bridge</td><td class="mono">BRIDGE-0.1.0</td><td>Contractual and physical endowment bridge for BESS inventory-dissipation formalism.</td></tr>
             </tbody>
           </table>
           <p class="small">Disclaimer: materials are provided for discussion and validation purposes only and do not constitute legal, financial, investment, regulatory, engineering, tax, or professional advice.</p>
@@ -632,8 +695,8 @@ GRₖ = h(xₖ, uₖ, dₖ, yₖ, θ, P(yₖ), E(xₖ,uₖ;θ), σₖ, xₖ₊�
     </main>
 
     <footer>
-      <span>ONEDGE ENERGY / IKKUNA SpA / Whitepaper v0.0.2</span>
-      <span>Proposed Open Standard / Candidate Specification / Pre-TRL-7 Validation</span>
+      <span>ONEDGE ENERGY / IKKUNA SpA / UVS-2 Active Vector</span>
+      <span>Candidate Specification / Pre-Stable / Pre-TRL-7 Validation</span>
     </footer>
   </div>
 </body>
