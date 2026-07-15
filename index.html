@@ -8,6 +8,8 @@
   <meta property="og:title" content="ONEDGE ENERGY UVS-2 — Active Specification Stack" />
   <meta property="og:description" content="Current ONEDGE specification stack: Golden Record schema, provenance tiers, BMS-TEE attestation, module extension standard, proof suite, and governance binding." />
   <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://onedge.energy/" />
+  <link rel="canonical" href="https://onedge.energy/" />
   <meta name="theme-color" content="#0b1220" />
   <style>
     :root {
@@ -334,9 +336,11 @@
       <div class="brand">ONEDGE ENERGY</div>
       <nav aria-label="Primary navigation">
         <a href="#vector">Vector</a>
+        <a href="#problem">Problem</a>
         <a href="#golden-record">Golden Record</a>
         <a href="#provenance">Provenance</a>
         <a href="#modules">Modules</a>
+        <a href="#governance">Governance</a>
         <a href="#roadmap">Roadmap</a>
         <a href="#documents">Documents</a>
       </nav>
@@ -350,7 +354,7 @@
           <p class="subhead">ONEDGE ENERGY now presents the active UVS-2 stack: Golden Record reconciliation, byte-level canonical commitments, provenance-tier attestation, the rc3 Module Extension Standard, registered proof primitives, and governance-bound claim discipline.</p>
           <div class="actions">
             <a class="button primary" href="#documents">View Spec Index</a>
-            <a class="button" href="public/whitepaper/onedge-energy-whitepaper-latest.pdf" target="_blank" rel="noopener">Open Whitepaper v0.0.2</a>
+            <a class="button" href="public/whitepaper/onedge-energy-whitepaper-latest.pdf" target="_blank" rel="noopener">Archived Base Whitepaper S-0.0.2</a>
           </div>
         </div>
         <aside class="sidecard" aria-label="Active specification metadata">
@@ -482,6 +486,7 @@ Required conformance properties:
 - domain-separated transcript labels;
 - exact reproduction of conformance vectors.</div>
           <p>S-0.0.4 publishes deterministic GRSCHEMA vectors for Compliant, Breach, and Opacity cases. Module-operator fixtures for <span class="mono">phi</span>, <span class="mono">psi</span>, and <span class="mono">delta</span> remain open in Move 2.</p>
+          <p class="small">Scope boundary: the current vectors establish canonical encoding and structural equality. Real proof-validity, witness-binding, and adversarial proof vectors remain open under CUR-0014; deterministic hashes alone do not establish those properties.</p>
         </div>
       </section>
 
@@ -520,14 +525,15 @@ Required conformance properties:
         <div class="section-label">07 / Provenance</div>
         <div>
           <h2>Evidence quality is tiered, not assumed.</h2>
-          <p>The active manifest carries a Tier-5 provenance scheme. Levels 0 through 4 align observed telemetry, soft signatures, hardware attestation, BMS-TEE silicon roots, and ZK-continuity into explicit minimum evidence thresholds.</p>
+          <p>The active manifest carries five provenance tiers, τ0 through τ4, aligning observed telemetry, soft signatures, hardware attestation, BMS-TEE silicon roots, and ZK-continuity into explicit minimum evidence thresholds.</p>
           <div class="grid five">
-            <article class="card compact"><span class="tag">Level 0 / τ0</span><h3>Unverified</h3><p>No signing root, freshness, or continuity requirement.</p></article>
-            <article class="card compact"><span class="tag">Level 1 / τ1</span><h3>Soft-signed</h3><p>Operator-key signing with freshness requirement.</p></article>
-            <article class="card compact"><span class="tag">Level 2 / τ2</span><h3>Hardware</h3><p>TPM/HSM/TEE at node boundary with freshness.</p></article>
-            <article class="card compact"><span class="tag">Level 3 / τ3</span><h3>BMS-TEE</h3><p>OEM silicon, StandardCo registry, device-key chain.</p></article>
-            <article class="card compact"><span class="tag">Level 4 / τ4</span><h3>ZK-continuity</h3><p>Tier 3 plus ZK-verified thermodynamic continuity.</p></article>
+            <article class="card compact"><span class="tag">Provenance Tier τ0</span><h3>Unverified</h3><p>No signing root, freshness, or continuity requirement.</p></article>
+            <article class="card compact"><span class="tag">Provenance Tier τ1</span><h3>Soft-signed</h3><p>Operator-key signing with freshness requirement.</p></article>
+            <article class="card compact"><span class="tag">Provenance Tier τ2</span><h3>Hardware</h3><p>TPM/HSM/TEE at node boundary with freshness.</p></article>
+            <article class="card compact"><span class="tag">Provenance Tier τ3</span><h3>BMS-TEE</h3><p>OEM silicon, StandardCo registry, device-key chain.</p></article>
+            <article class="card compact"><span class="tag">Provenance Tier τ4</span><h3>ZK-continuity</h3><p>Tier 3 plus ZK-verified thermodynamic continuity.</p></article>
           </div>
+          <p>Conformance Levels 0 through 4 describe statement maturity, while provenance tiers describe evidence origin and assurance. A Level <span class="mono">ℓ</span> claim requires at least provenance tier <span class="mono">τ ≥ ℓ</span>; the two scales are aligned but not interchangeable.</p>
           <p>TEEATTEST-1.0.0 is normative for telemetry claiming <span class="mono">τ ≥ 3</span>. It defines the StandardCo Root → OEM Root → Device Key chain, freshness anchors, revocation, and tier binding.</p>
         </div>
       </section>
@@ -672,14 +678,14 @@ Required conformance properties:
         <div class="section-label">14 / Spec Index</div>
         <div>
           <h2>Document-first institutional interface.</h2>
-          <p>This static page now indexes the active public-facing specification surfaces and keeps the original whitepaper as the archived public anchor.</p>
+          <p>This static page indexes the active public-facing specification surfaces. S-0.0.2 remains the base whitepaper and historical standalone anchor; the active S-axis must be read cumulatively through S-0.0.3 and S-0.0.4, with later amendments governing where applicable.</p>
           <table class="doc-table" aria-label="ONEDGE ENERGY active specification document index">
             <thead>
               <tr><th>Document</th><th>Status</th><th>Version</th><th>Purpose</th></tr>
             </thead>
             <tbody>
-              <tr><td><a href="public/whitepaper/onedge-energy-whitepaper-latest.pdf" target="_blank" rel="noopener">ONEDGE ENERGY Whitepaper</a></td><td>Archived public anchor</td><td class="mono">S-0.0.2</td><td>Original candidate-standard narrative and public whitepaper.</td></tr>
-              <tr><td><a href="public/specs/OnEdge_Energy_SpecHardening_v0.0.4.pdf" target="_blank" rel="noopener">Spec Hardening Note</a></td><td>Active S-axis hardening</td><td class="mono">S-0.0.4</td><td>UVS-2, Golden Record reconciliation, Fingerprint Baseline, and defined-term parity.</td></tr>
+              <tr><td><a href="public/whitepaper/onedge-energy-whitepaper-latest.pdf" target="_blank" rel="noopener">ONEDGE ENERGY Base Whitepaper</a></td><td>Base whitepaper / historical standalone</td><td class="mono">S-0.0.2</td><td>Base public narrative; read cumulatively with S-0.0.3 and S-0.0.4. Later amendments govern where applicable.</td></tr>
+              <tr><td><a href="public/specs/OnEdge_Energy_SpecHardening_v0.0.4.pdf" target="_blank" rel="noopener">Spec Hardening Note</a></td><td>Active S-axis hardening</td><td class="mono">S-0.0.4</td><td>UVS-2, Golden Record reconciliation, Fingerprint Baseline, and defined-term parity. References to Addendum No.1 identify version provenance and do not establish execution or binding effect.</td></tr>
               <tr><td><a href="public/specs/OnEdge_GR_Canonical_Schema_v1.0.0.pdf" target="_blank" rel="noopener">Golden Record Canonical Schema</a></td><td>Active S-axis schema</td><td class="mono">GRSCHEMA-1.0.0</td><td>Byte-level event commitment, aggregate root, public-input vector, and cross-runtime conformance.</td></tr>
               <tr><td><a href="public/specs/OnEdge_BMS_TEE_Attestation_v1.0.0.pdf" target="_blank" rel="noopener">BMS-TEE Attestation</a></td><td>Active S-axis attestation</td><td class="mono">TEEATTEST-1.0.0</td><td>Three-layer attestation chain, freshness anchors, revocation, and tier mapping for τ ≥ 3.</td></tr>
               <tr><td><a href="public/specs/OnEdge_Threat_Mitigation_Matrix_v1.0.0.pdf" target="_blank" rel="noopener">Threat Mitigation Matrix</a></td><td>Active S-axis coverage</td><td class="mono">THREATMTX-1.0.0</td><td>Threat-to-mitigation mapping across provenance, schema, TEE, operator, SDK, and governance surfaces.</td></tr>
